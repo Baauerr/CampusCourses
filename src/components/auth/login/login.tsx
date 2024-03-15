@@ -4,74 +4,88 @@ import Button from '@mui/material/Button';
 import Container from '@mui/material/Container';
 import { useState } from 'react';
 import { AuthService } from '../authService';
-import { IResponseLoginData } from '../../../types/userTypes/registrationTypes';
-import { setTokenToLocalStorage } from '../../../helpers/tokenHelper';
 import { useAppDispatch } from '../../../store/hooks';
 import { useNavigate } from 'react-router-dom';
 import { login, roles } from '../../../store/user/userSlice';
+import { useFormik } from 'formik';
+import * as yup from 'yup';
+import { setTokenToLocalStorage } from '../../../helpers/tokenHelper';
 
 export const Login = () => {
 
     const dispatch = useAppDispatch();
     const navigate = useNavigate();
 
-    const [data, setData] = useState<IResponseLoginData>({
-        email: '',
-        password: '',
-    })
+    const [serverError, setServerError] = useState<string>('');
 
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setData({
-            ...data,
-            [e.target.id]: e.target.value
-        });
-    };
+    const formik = useFormik({
+        initialValues: {
+            email: '',
+            password: '',
+        },
+        validationSchema: yup.object({
+            email: yup.string().email('Введите корректный email').required('Email обязателен для заполнения'),
+            password: yup.string().required('Пароль обязателен для заполнения'),
+        }),
+        onSubmit: async (values, { setSubmitting }) => {
+            try {
+                const loginResponse = await AuthService.login(values);
 
-    const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
-        e.preventDefault();
-        try {
-            const userData = {
-                email: data.email,
-                password: data.password,
-            }
-            const loginResponse = await AuthService.login(userData)
-            if (loginResponse) {
-                setTokenToLocalStorage(loginResponse.token);
-                dispatch(login(loginResponse));
-                const userRoles = await AuthService.getUserRole();
 
-                if (userRoles !== undefined) {
-                    dispatch(roles(userRoles))
+                if (loginResponse) {
+                    setServerError('');
+                    setTokenToLocalStorage(loginResponse.token)
+                    dispatch(login(loginResponse));
+
+                    const userRoles = await AuthService.getUserRole();
+
+                    if (userRoles !== undefined) {
+                        dispatch(roles(userRoles));
+                    }
+
+                    navigate("/");
                 }
-                navigate("/");
+            } catch (error: any) {
+                if (error.response && error.response.status === 400) {
+                    setServerError('Неверный логин или пароль');
+                }
+            } finally {
+                setSubmitting(false);
             }
-        }
-        catch {
-            console.log("bruh");
-        }
-    };
+        },
+    });
 
     return (
-        <Container maxWidth="sm" sx={{ paddingTop: "80px" }}>
-            <form onSubmit={handleLogin}>
-                <Item elevation={24}>
+        <Container maxWidth="sm">
+            <form onSubmit={formik.handleSubmit}>
+                <Item elevation={24} sx = {{borderRadius: '15px'}}>
                     <h1>Вход</h1>
                     <TextField
                         sx={{ marginBottom: 2 }}
                         fullWidth
                         id="email"
+                        name="email"
                         label="Email"
                         variant="outlined"
-                        onChange={handleChange}
+                        value={formik.values.email}
+                        onChange={formik.handleChange}
+                        error={formik.touched.email && Boolean(formik.errors.email) || !!serverError}
+                        helperText={(formik.touched.email && formik.errors.email)}
                     />
                     <TextField
                         sx={{ marginBottom: 2 }}
-                        fullWidth id="password"
+                        fullWidth
+                        id="password"
+                        name="password"
                         label="Пароль"
                         variant="outlined"
-                        onChange={handleChange}
+                        type="password"
+                        value={formik.values.password}
+                        onChange={formik.handleChange}
+                        error={formik.touched.password && Boolean(formik.errors.password) || !!serverError}
+                        helperText={(formik.touched.password && formik.errors.password) || serverError}
                     />
-                    <Button fullWidth size="large" variant="contained" type="submit">Войти</Button>
+                    <Button fullWidth size="large" variant="contained" type="submit" disabled={formik.isSubmitting}>Войти</Button>
                 </Item>
             </form>
         </Container>

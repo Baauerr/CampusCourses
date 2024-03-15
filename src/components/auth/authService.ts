@@ -9,21 +9,13 @@ import { IResponseAccountInfoData } from "../../types/userTypes/accountTypes"
 export const AuthService = {
 
     async registration(userData: IResponseRegistrationData): Promise<IAuthRequestData | undefined> {
-        try {
             const { data } = await instance.post<IAuthRequestData>(`registration`, userData)
             return data
-        } catch (err) {
-            console.error(err)
-        }
     },
 
     async login(userData: IResponseLoginData): Promise<IAuthRequestData | undefined> {
-        try {
             const { data } = await instance.post<IAuthRequestData>(`login`, userData)
             return data
-        } catch (err) {
-            console.error(err)
-        }
     },
 
     async getUserInfo() { 
@@ -50,6 +42,18 @@ export const AuthService = {
         }
         
     },
+
+    async editUserAccount(newData: IResponseAccountInfoData) { 
+        const {data} = await instance.put('profile', newData)
+        try{
+            return data
+        }
+        catch {
+            console.log("bruh")
+        }
+        
+    },
+    
 
     async logout() {
         await instance.post('logout');

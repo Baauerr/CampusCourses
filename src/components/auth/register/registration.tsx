@@ -1,148 +1,151 @@
 import Item from '../item';
 import TextField from '@mui/material/TextField';
-import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import { DateField } from '@mui/x-date-pickers';
 import Button from '@mui/material/Button';
 import Container from '@mui/material/Container';
-import { ChangeEvent, useState } from 'react';
-import { IResponseRegistrationData } from '../../../types/userTypes/registrationTypes';
 import { useNavigate } from 'react-router-dom';
 import { AuthService } from '../authService';
 import { useAppDispatch } from '../../../store/hooks';
 import { login } from '../../../store/user/userSlice';
 import { roles } from '../../../store/user/userSlice';
 import { setTokenToLocalStorage } from '../../../helpers/tokenHelper';
-import React from 'react';
+import { useFormik } from "formik";
+import { registrationValidationSchema } from '../../../helpers/validations/registrationValidation';
+import { useState } from 'react';
 
 export const Registration = () => {
 
     const dispatch = useAppDispatch();
     const navigate = useNavigate()
 
-    const [data, setData] = useState<IResponseRegistrationData>({
+    const [serverError, setServerError] = useState<string>('');
+
+    interface FormData {
+        email: string;
+        password: string;
+        birthDate: string;
+        confirmPassword: string;
+        fullName: string;
+    }
+    const initialValues: FormData = {
         email: '',
         password: '',
         birthDate: '',
         confirmPassword: '',
         fullName: '',
-    })
-
-    const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
-        setData({
-            ...data,
-            [e.target.id]: e.target.value
-        });
     };
 
-    const handleDateChange = (date: string | null) => {
-        if (date) {
-            setData({
-                ...data,
-                birthDate: date,
-            });
-        }
-    };
-
-    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-
-        e.preventDefault();
-        
-
-        if (data.password == data.confirmPassword) {
+    const formik = useFormik({
+        initialValues: initialValues,
+        validationSchema: registrationValidationSchema,
+        onSubmit: async (values, { setSubmitting }) => {
             try {
-                const userData = {
-                    email: data.email,
-                    password: data.password,
-                    birthDate: data.birthDate,
-                    confirmPassword: data.confirmPassword,
-                    fullName: data.fullName,
-                }
-                const registrationResponse = await AuthService.registration(userData)
+                const registrationResponse = await AuthService.registration(values);
                 if (registrationResponse) {
                     setTokenToLocalStorage(registrationResponse.token);
+
                     dispatch(login(registrationResponse));
                     const userRoles = await AuthService.getUserRole();
-                    
-                    if (userRoles !== undefined){
-                        dispatch(roles(userRoles))
+
+                    if (userRoles !== undefined) {
+                        dispatch(roles(userRoles));
                     }
-        
+
                     navigate("/");
                 }
+            } catch (error: any) {
+                if (error.response && error.response.data.message === "User with this email is already registered.") {
+                    setServerError('Такой email уже занят');
+                    formik.setFieldError('email', 'Такой email уже занят');
+                } else {
+                    console.error(error);
+                    setServerError('Произошла ошибка. Попробуйте еще раз.');
+                }
+            } finally {
+                setSubmitting(false);
             }
-            catch {
-                console.log("bruh");
-            }
-        }
-    };
+        },
+    });
 
     return (
-        <Container maxWidth="sm" sx={{ paddingTop: "80px" }}>
-            <Item elevation={24}>
-                <form onSubmit={handleSubmit}>
+        <Container maxWidth="sm">
+            <Item elevation={24} sx = {{borderRadius: '15px'}}>
+                <form onSubmit={formik.handleSubmit}>
                     <h1>Регистрация</h1>
                     <TextField
-                        sx={{ marginBottom: 2 }}
-                        fullWidth id="email"
+                        fullWidth
+                        id="email"
                         label="Email"
                         variant="outlined"
-                        onChange={handleChange}
+                        {...formik.getFieldProps("email")}
+                        error={formik.touched.email && (Boolean(formik.errors.email) || !!serverError)}
+                        helperText={(formik.touched.email && formik.errors.email) || serverError}
                     />
                     <TextField
-                        sx={{ marginBottom: 2 }}
+                        sx={{ marginTop: 2 }}
                         fullWidth id="fullName"
                         label="ФИО"
                         variant="outlined"
-                        onChange={handleChange}
+                        {...formik.getFieldProps("fullName")}
+                        error={
+                            formik.touched.fullName && Boolean(formik.errors.fullName)
+                        }
+                        helperText={formik.touched.fullName && formik.errors.fullName}
                     />
-                    <PickDate onChange={handleDateChange} />
                     <TextField
-                        sx={{ marginBottom: 2 }}
+                        sx={{ marginTop: 2 }}
+                        variant="outlined"
+                        fullWidth
+                        id="birthDate"
+                        label="Дата рождения"
+                        type="date"
+                        InputLabelProps={{ shrink: true }}
+                        {...formik.getFieldProps("birthDate")}
+                        error={
+                            formik.touched.birthDate && Boolean(formik.errors.birthDate)
+                        }
+                        helperText={
+                            formik.touched.birthDate && formik.errors.birthDate
+                        }
+                    />
+                    <TextField
+                        sx={{ marginTop: 2 }}
                         fullWidth id="password"
                         label="Пароль"
                         variant="outlined"
-                        onChange={handleChange}
+                        type = "password"
+                        {...formik.getFieldProps("password")}
+                        error={
+                            formik.touched.password && Boolean(formik.errors.password)
+                        }
+                        helperText={formik.touched.password && formik.errors.password}
                     />
                     <TextField
-                        sx={{ marginBottom: 2 }}
-                        fullWidth id="confirmPassword"
+                        sx={{ marginTop: 2 }}
+                        fullWidth
+                        id="confirmPassword"
                         label="Повторите пароль"
                         variant="outlined"
-                        onChange={handleChange}
+                        type = "password"
+                        {...formik.getFieldProps("confirmPassword")}
+                        error={
+                            formik.touched.confirmPassword &&
+                            Boolean(formik.errors.confirmPassword)
+                        }
+                        helperText={
+                            formik.touched.confirmPassword &&
+                            formik.errors.confirmPassword
+                        }
                     />
-                    <Button fullWidth size="large" variant="contained" type="submit">
+                    <Button fullWidth size="large" variant="contained" type="submit" sx={{ marginTop: 2 }}>
                         Зарегистрироваться
                     </Button>
                 </form>
             </Item>
-        </Container>
+        </Container >
     );
 };
 
 export default Registration;
 
-export const PickDate = ({ onChange }: { onChange: (date: string | null) => void }, dateInfo?: string) => {
-    const [value, setValue] = useState<string | null>(null);
-
-    const handleDateChange = (newValue: string | null) => {
-        setValue(newValue);
-        onChange(newValue);
-    };
-
-    return (
-        <LocalizationProvider dateAdapter={AdapterDayjs}>
-            <DateField
-                sx={{ marginBottom: 2 }}
-                fullWidth
-                id="birthDate"
-                label="День рождения"
-                value={dateInfo}
-                format="DD.MM.YYYY"
-                onChange={handleDateChange}
-            />
-        </LocalizationProvider>
-    );
-};
 
 

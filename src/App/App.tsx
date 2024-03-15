@@ -6,9 +6,8 @@ import checkAuth from "../helpers/checkAuth.ts";
 import { useAppDispatch } from "../store/hooks.ts";
 
 const App = () => {
-
   const dispatch = useAppDispatch()
-  
+
   useEffect(() => {
     checkAuth(dispatch)
   }, [])
@@ -16,7 +15,9 @@ const App = () => {
   return (
     <Fragment>
       <Header />
-      <Outlet />
+      <div style={{padding:  "80px"}}>
+        <Outlet />
+      </div>
     </Fragment>
   )
 }

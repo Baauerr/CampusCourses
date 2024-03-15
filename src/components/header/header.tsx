@@ -3,7 +3,7 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../hooks/useAuth';
 import { AuthService } from '../auth/authService';
 import { useAppDispatch } from '../../store/hooks';
@@ -38,7 +38,7 @@ const Head = () => {
       <AppBar sx={{ backgroundColor: '#002C54' }}>
         <Toolbar sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
           <Typography variant="h5" component="div" sx={{ display: 'flex', alignItems: 'stretch', gap: '10px' }}>
-            Кампусные курсы
+              Кампусные курсы
             <UserRolePanel />
           </Typography>
           <UserPanel />
@@ -53,6 +53,8 @@ export const UserPanel = () => {
 
   const dispatch = useAppDispatch()
 
+  const navigate = useNavigate();
+
   const handleClick = async (e: React.FormEvent<HTMLButtonElement>) => {
 
     e.preventDefault();
@@ -61,6 +63,7 @@ export const UserPanel = () => {
     try {
       await AuthService.logout()
       dispatch(logout());
+      navigate("/")
     }
     catch {
       console.log("bruh");
@@ -102,15 +105,15 @@ const UserRolePanel = () => {
   if (isAuth) {
     return (
       <div>
-        <Link to="/">
+        <Link to="/groups">
           <Button variant="text" sx={{ color: 'white' }}>Группы курсов</Button>
         </Link>
         {roles?.isStudent &&
-          <Link to="/">
+          <Link to="/courses/my">
             <Button variant="text" sx={{ color: 'white' }}>Мои курсы</Button>
           </Link>}
         {roles?.isTeacher &&
-          <Link to="/">
+          <Link to="/courses/teaching">
             <Button variant="text" sx={{ color: 'white' }}>Преподаваемые курсы</Button>
           </Link>}
       </div>
