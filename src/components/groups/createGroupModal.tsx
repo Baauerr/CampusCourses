@@ -1,28 +1,17 @@
 
-import { Typography, Card, Button } from '@mui/material';
+import { Typography, Card, Button, Backdrop  } from '@mui/material';
 import { CoursesService } from './groupsService';
 import { IRequestGroupsCreateData } from "../../types/coursesTypes/groupCourses"
 import { useState } from 'react';
 
 import Modal from '@mui/material/Modal';
 import TextField from '@mui/material/TextField';
+import { style } from './editGroupModal';
 
 type CreateModalProps = {
     open: boolean;
     handleClose: () => void;
     setUpdated: React.Dispatch<React.SetStateAction<boolean>>;
-};
-
-const style = {
-    position: 'absolute' as 'absolute',
-    top: '50%',
-    left: '50%',
-    transform: 'translate(-50%, -50%)',
-    width: 400,
-    bgcolor: 'background.paper',
-    border: '1px solid #000',
-    boxShadow: 90,
-    p: 6,
 };
 
 export const CreateModal = ({ open, handleClose, setUpdated }: CreateModalProps) => {
@@ -31,6 +20,9 @@ export const CreateModal = ({ open, handleClose, setUpdated }: CreateModalProps)
 
     const handleClick = async () => {
         try {
+
+            
+
             await CoursesService.createGroup(textValue);
             setUpdated(true);
             handleClose();

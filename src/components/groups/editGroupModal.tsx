@@ -2,19 +2,20 @@
 import { Typography, Card, Button } from '@mui/material';
 import { CoursesService } from './groupsService';
 import { IRequestGroupsCreateData } from "../../types/coursesTypes/groupCourses"
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import Modal from '@mui/material/Modal';
 import TextField from '@mui/material/TextField';
 
 type CreateModalProps = {
+    id: string
     groupName: string
     open: boolean;
     handleClose: () => void;
     setUpdated: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
-const style = {
+export const style = {
     position: 'absolute' as 'absolute',
     top: '50%',
     left: '50%',
@@ -24,21 +25,34 @@ const style = {
     border: '1px solid #000',
     boxShadow: 90,
     p: 6,
+    borderRadius: 2,
 };
 
-export const EditModal = ({ groupName, open, handleClose, setUpdated }: CreateModalProps) => {
+export const EditModal = ({ groupName, open, handleClose, setUpdated, id }: CreateModalProps) => {
 
     const [textValue, setTextValue] = useState<IRequestGroupsCreateData>({ name: '' });
 
     const handleClick = async () => {
         try {
-            await CoursesService.editGroup(textValue);
+
+            const updateInfo: IRequestGroupsCreateData = {
+                name: textValue.name
+            }
+
+            await CoursesService.editGroup(updateInfo, id);
             setUpdated(true);
             handleClose();
         } catch (error) {
             console.log("bruh");
         }
     };
+
+    useEffect(() => {
+        const name: IRequestGroupsCreateData = {
+            name: groupName
+        }
+        setTextValue(name);
+    }, [groupName]);
 
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setTextValue({ ...textValue, name: event.target.value });
@@ -58,12 +72,12 @@ export const EditModal = ({ groupName, open, handleClose, setUpdated }: CreateMo
                 id="name"
                 name="name"
                 label="Название"
+                value={textValue.name}
                 variant="outlined"
-                value={groupName}
                 onChange={handleChange}
             />
-            <Button variant="contained" onClick={handleClick}>
-                создать
+            <Button variant="contained" color = {"warning"} onClick={handleClick}>
+                редактировать
             </Button>
         </Card>
     </Modal>

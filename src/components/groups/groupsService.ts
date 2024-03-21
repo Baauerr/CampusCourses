@@ -14,13 +14,13 @@ export const CoursesService = {
         return data
     },
 
-    async editGroup(info: IRequestGroupsCreateData) { 
-        const { data } = await instance.put('groups', info)
+    async editGroup(info: IRequestGroupsCreateData, id: string) { 
+        const { data } = await instance.put(`groups/${id}`, info)
         return data
     },
 
-    async getProfileInfo(): Promise<IResponseAccountInfoData | undefined> { 
-        const {data} = await instance.get('profile')
+    async deleteGroup(id: string): Promise<IResponseAccountInfoData | undefined> { 
+        const {data} = await instance.delete(`groups/${id}`)
         if (data){
             return data
         }
