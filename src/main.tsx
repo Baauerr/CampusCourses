@@ -9,9 +9,6 @@ import Login from "./components/auth/login/login.tsx";
 import { Provider } from "react-redux";
 import { store } from "./store/store.ts";
 import Profile from "./components/auth/profile/profile.tsx";
-import GroupsCoursesPage from "./components/groupsCourses/groupsCourses.tsx";
-import MyCoursesPage from "./components/studentCourses/myCourses.tsx";
-import TeachingCoursesPage from "./components/teacherCourses/teacherCourses.tsx";
 
 export const router = createBrowserRouter([
   {
@@ -29,18 +26,6 @@ export const router = createBrowserRouter([
       {
         path: "/profile",
         element: <Profile />,
-      },
-      {
-        path: "/groups",
-        element: <GroupsCoursesPage/>,
-      },
-      {
-        path: "/courses/my",
-        element: <MyCoursesPage />,
-      },
-      {
-        path: "/courses/teaching",
-        element: <TeachingCoursesPage />,
       },
     ]
   }
