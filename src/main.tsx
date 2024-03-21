@@ -9,6 +9,8 @@ import Login from "./components/auth/login/login.tsx";
 import { Provider } from "react-redux";
 import { store } from "./store/store.ts";
 import Profile from "./components/auth/profile/profile.tsx";
+import { CoursesGroup } from "./components/groups/coursesGroup.tsx";
+import { ConcretteGroup } from "./components/groups/concretteGroup.tsx";
 
 export const router = createBrowserRouter([
   {
@@ -16,16 +18,24 @@ export const router = createBrowserRouter([
     element: <App />,
     children: [
       {
-        path: "/registration",
+        path: "/registration/",
         element: <Registration />,
       },
       {
-        path: "/login",
+        path: "/login/",
         element: <Login />,
       },
       {
         path: "/profile",
         element: <Profile />,
+      },
+      {
+        path: "/groups/",
+        element: <CoursesGroup />,
+      },
+      {
+        path: "/groups/:id",
+        element: <ConcretteGroup />,
       },
     ]
   }
