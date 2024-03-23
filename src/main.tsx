@@ -9,8 +9,8 @@ import Login from "./components/auth/login/login.tsx";
 import { Provider } from "react-redux";
 import { store } from "./store/store.ts";
 import Profile from "./components/auth/profile/profile.tsx";
-import { CoursesGroup } from "./components/groups/coursesGroup.tsx";
-import { ConcretteGroup } from "./components/groups/concretteGroup.tsx";
+import { CoursesGroup } from "./components/groups/coursesGroups/coursesGroup.tsx";
+import { ConcretteGroup } from "./components/groups/concretteGroup/concretteGroup.tsx";
 
 export const router = createBrowserRouter([
   {

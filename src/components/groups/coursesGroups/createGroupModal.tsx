@@ -1,12 +1,13 @@
 
-import { Typography, Card, Button, Backdrop  } from '@mui/material';
-import { CoursesService } from './groupsService';
-import { IRequestGroupsCreateData } from "../../types/coursesTypes/groupCourses"
+import { Typography, Card, Button } from '@mui/material';
+import { CoursesService } from '../groupsService';
+import { IRequestGroupsCreateData } from "../../../types/coursesTypes/groupCourses"
 import { useState } from 'react';
-
 import Modal from '@mui/material/Modal';
 import TextField from '@mui/material/TextField';
 import { style } from './editGroupModal';
+import IconButton from '@mui/material/IconButton';
+import CloseIcon from '@mui/icons-material/Close';
 
 type CreateModalProps = {
     open: boolean;
@@ -21,7 +22,7 @@ export const CreateModal = ({ open, handleClose, setUpdated }: CreateModalProps)
     const handleClick = async () => {
         try {
 
-            
+
 
             await CoursesService.createGroup(textValue);
             setUpdated(true);
@@ -42,6 +43,18 @@ export const CreateModal = ({ open, handleClose, setUpdated }: CreateModalProps)
         aria-describedby="modal-modal-description"
     >
         <Card sx={style}>
+            <IconButton
+                aria-label="close"
+                onClick={handleClose}
+                sx={{
+                    position: 'absolute',
+                    right: 8,
+                    top: 8,
+                    color: (theme) => theme.palette.grey[500],
+                }}
+            >
+                <CloseIcon />
+            </IconButton>
             <Typography id="modal-modal-title" fontWeight="bold" variant="h5" sx={{ marginBottom: "10px" }}>Создать группу</Typography>
             <TextField
                 sx={{ marginBottom: 1.5 }}

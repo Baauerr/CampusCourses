@@ -1,17 +1,19 @@
 import Grid from '@mui/material/Grid';
 import { Typography, Card, Container, Link as MuiLink, Button } from '@mui/material';
-import { CoursesService } from './groupsService';
-import { IResponseGroupsCoursesData } from "../../types/coursesTypes/groupCourses"
-import { SetStateAction, useEffect, useState } from 'react';
+import { CoursesService } from '../groupsService';
+import { IResponseGroupsCoursesData } from "../../../types/coursesTypes/groupCourses"
+import { useEffect, useState } from 'react';
 import { Link as RouterLink } from 'react-router-dom';
-import { RootState } from '../../store/store';
-import { useAuth } from '../../hooks/useAuth';
+import { RootState } from '../../../store/store';
+import { useAuth } from '../../../hooks/useAuth';
 import { useSelector } from 'react-redux';
 import CreateModal from './createGroupModal';
 import EditModal from './editGroupModal';
-import { IUserRolesData } from '../../types/userTypes/roleTypes';
+import { IUserRolesData } from '../../../types/userTypes/roleTypes';
+import DeleteModal from './deleteModal';
 
-const cardHoverStyles = {
+
+export const cardHoverStyles = {
     width: '100%',
     padding: '10px',
     marginBottom: 0.3,
@@ -27,13 +29,16 @@ export const CoursesGroup = () => {
     const [groups, setGroupsInfo] = useState<IResponseGroupsCoursesData[]>();
     const [open, setOpen] = useState(false);
     const [updated, setUpdated] = useState(true)
+    
 
     const roles = useSelector((state: RootState) => state.user.roles);
     const isAuth = useAuth();
 
 
+
     const handleOpen = () => setOpen(true);
     const handleClose = () => setOpen(false);
+    
 
     useEffect(() => {
         if (updated) {
@@ -68,7 +73,7 @@ export const CoursesGroup = () => {
                                 <Grid item xs={12} sm={8}>
                                     <MuiLink
                                         component={RouterLink}
-                                        to={`/course/${item.id}`}
+                                        to={`/groups/${item.id}`}
                                         underline="none"
                                         key={item.id}
                                         color={'black'}
@@ -76,7 +81,7 @@ export const CoursesGroup = () => {
                                         <Typography>{item.name}</Typography>
                                     </MuiLink>
                                 </Grid>
-                                <EditButtons roles={roles} groupName={item.name} handleClose={handleClose} setUpdated={setUpdated} id = {item.id}/>
+                                <EditButtons roles={roles} groupName={item.name} setUpdated={setUpdated} id = {item.id}/>
                             </Grid>
                         </Card>
 
@@ -91,44 +96,41 @@ export const CoursesGroup = () => {
 type EditButtonsProps  = {
     roles: IUserRolesData | null;
     groupName: string;
-    handleClose: () => void;
     setUpdated: React.Dispatch<React.SetStateAction<boolean>>;
     id: string
 };
 
-const EditButtons = ({ roles, setUpdated, handleClose, groupName, id }: EditButtonsProps) => {
+const EditButtons = ({ roles, setUpdated, groupName, id }: EditButtonsProps) => {
 
-    const [open, setOpen] = useState(false);
+    const [openEdit, setOpenEdit] = useState(false);
 
-    const handleOpen = () => setOpen(true);
+    const handleOpenEdit = () => setOpenEdit(true);
+    const handleCloseEdit = () => setOpenEdit(false);
 
-    const handleDelete = async () => {
-        try {
-            await CoursesService.deleteGroup(id);
-            setUpdated(true);
-        } catch (error) {
-            console.error("no");
-        }
-    };
+    const [openDelete, setOpenDelete] = useState(false);
+
+    const handleOpenDelete = () => setOpenDelete(true);
+    const handleCloseDelete = () => setOpenDelete(false);
 
     return (
         <>
             {roles?.isAdmin && (
                 <>
                     <Grid item xs={12} lg={2}>
-                        <Button variant="contained" color="warning" onClick={handleOpen}>
+                        <Button variant="contained" color="warning" onClick={handleOpenEdit}>
                             Редактировать
                         </Button>
                     </Grid>
                     <Grid item xs={12} lg={2}>
-                        <Button variant="contained" color="error" onClick={handleDelete}>
+                        <Button variant="contained" color="error" onClick={handleOpenDelete}>
                             Удалить
                         </Button>
                     </Grid>
                 
                 </>
             )} 
-            <EditModal setUpdated={setUpdated} open={open} handleClose={handleClose} groupName={groupName} id = {id} />
+            <EditModal setUpdated={setUpdated} openEdit={openEdit} handleClose={handleCloseEdit} groupName={groupName} id = {id} />
+            <DeleteModal setUpdated={setUpdated} openDelete={openDelete} handleCloseDelete={handleCloseDelete} groupName={groupName} id = {id} />
         </>
     );
 };

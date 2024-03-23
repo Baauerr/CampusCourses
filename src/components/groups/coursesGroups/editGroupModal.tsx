@@ -1,16 +1,18 @@
 
 import { Typography, Card, Button } from '@mui/material';
-import { CoursesService } from './groupsService';
-import { IRequestGroupsCreateData } from "../../types/coursesTypes/groupCourses"
+import { CoursesService } from '../groupsService';
+import { IRequestGroupsCreateData } from "../../../types/coursesTypes/groupCourses"
 import { useEffect, useState } from 'react';
+import IconButton from '@mui/material/IconButton';
+import CloseIcon from '@mui/icons-material/Close';
 
 import Modal from '@mui/material/Modal';
 import TextField from '@mui/material/TextField';
 
-type CreateModalProps = {
+type EditModalProps = {
     id: string
     groupName: string
-    open: boolean;
+    openEdit: boolean;
     handleClose: () => void;
     setUpdated: React.Dispatch<React.SetStateAction<boolean>>;
 };
@@ -20,15 +22,14 @@ export const style = {
     top: '50%',
     left: '50%',
     transform: 'translate(-50%, -50%)',
-    width: 400,
-    bgcolor: 'background.paper',
-    border: '1px solid #000',
+    width: 600,
+   // bgcolor: 'background.paper',
     boxShadow: 90,
     p: 6,
     borderRadius: 2,
 };
 
-export const EditModal = ({ groupName, open, handleClose, setUpdated, id }: CreateModalProps) => {
+export const EditModal = ({ groupName, openEdit, handleClose, setUpdated, id }: EditModalProps) => {
 
     const [textValue, setTextValue] = useState<IRequestGroupsCreateData>({ name: '' });
 
@@ -59,12 +60,24 @@ export const EditModal = ({ groupName, open, handleClose, setUpdated, id }: Crea
     };
 
     return (<Modal
-        open={open}
+        open={openEdit}
         onClose={handleClose}
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
     >
         <Card sx={style}>
+            <IconButton
+                aria-label="close"
+                onClick={handleClose}
+                sx={{
+                    position: 'absolute',
+                    right: 8,
+                    top: 8,
+                    color: (theme) => theme.palette.grey[500],
+                }}
+            >
+                <CloseIcon />
+            </IconButton>
             <Typography id="modal-modal-title" fontWeight="bold" variant="h5" sx={{ marginBottom: "10px" }}>Редактировать группу</Typography>
             <TextField
                 sx={{ marginBottom: 1.5 }}
@@ -76,7 +89,7 @@ export const EditModal = ({ groupName, open, handleClose, setUpdated, id }: Crea
                 variant="outlined"
                 onChange={handleChange}
             />
-            <Button variant="contained" color = {"warning"} onClick={handleClick}>
+            <Button variant="contained" color={"warning"} onClick={handleClick}>
                 редактировать
             </Button>
         </Card>
