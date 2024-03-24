@@ -12,6 +12,7 @@ const App = () => {
     checkAuth(dispatch)
   }, [])
 
+
   return (
     <Fragment>
       <Header />
