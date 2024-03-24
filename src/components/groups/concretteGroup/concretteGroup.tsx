@@ -27,23 +27,24 @@ export const ConcretteGroup = () => {
     const roles = useSelector((state: RootState) => state.user.roles);
 
     useEffect(() => {
-
-        const fetchData = async () => {
-            try {
-                const groupsInfo = await CoursesService.getCourses(id);
-                if (groupsInfo !== undefined) {
-                    setGroupsInfo(groupsInfo)
+        if (updated){
+            const fetchData = async () => {
+                try {
+                    const groupsInfo = await CoursesService.getCourses(id);
+                    if (groupsInfo !== undefined) {
+                        setGroupsInfo(groupsInfo)
+                    }
+                    else {
+                        throw Error("bruh")
+                    }
+                } catch (error) {
+                    console.error(error);
                 }
-                else {
-                    throw Error("bruh")
-                }
-            } catch (error) {
-                console.error(error);
-            }
-        };
-
-        fetchData();
-    }, []);
+            };
+            fetchData();  
+        }
+        setUpdated(false)
+    }, [updated]);
 
     return (
         <Container maxWidth="lg">

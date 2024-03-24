@@ -1,5 +1,5 @@
 
-import { Typography, Card, Button } from '@mui/material';
+import { Typography, Card, Button, InputLabel } from '@mui/material';
 import { CoursesService } from '../groupsService';
 import { useEffect, useState } from 'react';
 import Modal from '@mui/material/Modal';
@@ -11,7 +11,6 @@ import { useFormik } from "formik";
 import Radio from '@mui/material/Radio';
 import RadioGroup from '@mui/material/RadioGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
-import FormLabel from '@mui/material/FormLabel';
 import MenuItem from '@mui/material/MenuItem';
 import Select from '@mui/material/Select';
 import ReactQuill from 'react-quill';
@@ -58,7 +57,7 @@ export const CreateCourseModal = ({ open, handleClose, setUpdated }: CreateModal
         initialValues: initialValues,
         validationSchema: createCourseValidation,
         onSubmit: async (values, { setSubmitting }) => {
-            await submitValues(values, setSubmitting);
+            submitValues(values, setSubmitting);
         },
     });
 
@@ -66,11 +65,11 @@ export const CreateCourseModal = ({ open, handleClose, setUpdated }: CreateModal
         try {
             await CoursesService.createCourse(values, id);
             setUpdated(true);
-           // handleClose();
+            handleClose();
         } catch (error: any) {
-            if (error.response && error.response.data.message === "User with this email is already registered.") {
+            if (error.response) {
                 setServerError('Такое название уже занято');
-                formik.setFieldError('email', 'Такое название уже занято');
+                formik.setFieldError('name', 'Такое название уже занято');
             } else {
                 console.error(error);
                 setServerError('Произошла ошибка. Попробуйте еще раз.');
@@ -131,6 +130,7 @@ export const CreateCourseModal = ({ open, handleClose, setUpdated }: CreateModal
                     sx={{ marginTop: 2 }}
                     fullWidth id="startYear"
                     label="Год начала курса"
+                    type="number"
                     variant="outlined"
                     {...formik.getFieldProps("startYear")}
                     error={
@@ -139,10 +139,11 @@ export const CreateCourseModal = ({ open, handleClose, setUpdated }: CreateModal
                     helperText={formik.touched.startYear && formik.errors.startYear}
                 />
                 <TextField
-                    sx={{ marginTop: 2, marginBottom: 2 }}
+                    sx={{ marginTop: 2 }}
                     variant="outlined"
                     fullWidth
                     id="maximumStudentsCount"
+                    type="number"
                     label="Общее количество мест"
                     {...formik.getFieldProps("maximumStudentsCount")}
                     error={
@@ -152,7 +153,7 @@ export const CreateCourseModal = ({ open, handleClose, setUpdated }: CreateModal
                         formik.touched.maximumStudentsCount && formik.errors.maximumStudentsCount
                     }
                 />
-                <FormLabel id="demo-row-radio-buttons-group-label">Семестр</FormLabel>
+                <InputLabel id="demo-row-radio-buttons-group-label" sx= {{marginTop: 1}}>Семестр</InputLabel>
                 <RadioGroup
                     row
                     aria-labelledby="demo-row-radio-buttons-group-label"
@@ -161,16 +162,19 @@ export const CreateCourseModal = ({ open, handleClose, setUpdated }: CreateModal
                     <FormControlLabel value="Autumn" control={<Radio />} label="Осенний" />
                     <FormControlLabel value="Spring" control={<Radio />} label="Весенний" />
                 </RadioGroup>
-                <FormLabel>Требования</FormLabel>
+                <InputLabel sx={{marginTop: 1}}>Требования (обязательно)</InputLabel>
                 <QuillField name="requirements" setFieldValue={formik.setFieldValue} value={formik.values.requirements} />
-                <FormLabel sx={{ marginTop: 2 }}>Аннотации</FormLabel>
+                <InputLabel sx={{ marginTop: 1 }}>Аннотации (обязательно)</InputLabel>
                 <QuillField name="annotations" setFieldValue={formik.setFieldValue} value={formik.values.annotations} />
+                <InputLabel htmlFor="mainTeacherId" sx={{marginTop: 1}}>Основной преподаватель курса</InputLabel>
                 <Select
                     variant="outlined"
-                    label="jija"
+                    id="mainTeacherId"
                     fullWidth
-                    sx={{ marginTop: 2 }}
                     {...formik.getFieldProps("mainTeacherId")}
+                    error={
+                        formik.touched.mainTeacherId && Boolean(formik.errors.mainTeacherId)
+                    }
                 >
                     {users?.map((item) =>
                     (
@@ -181,7 +185,6 @@ export const CreateCourseModal = ({ open, handleClose, setUpdated }: CreateModal
                     Создать
                 </Button>
             </form>
-
         </Card>
     </Modal>
     );

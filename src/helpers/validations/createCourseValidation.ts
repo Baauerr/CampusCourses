@@ -3,8 +3,8 @@ import * as yup from 'yup';
 export const createCourseValidation = yup.object().shape({
     name: yup.string().required("Название обязательно для заполнения"),
     maximumStudentsCount: yup.number()
-        .min(1)
-        .required("На курсе должно быть минимум 1 место"),
+        .min(1, "На курсе должно быть минимум 1 место")
+        .required("Количество мест обязательно для заполнения"),
     startYear: yup.number()
         .min(2024, 'Курс не должен начаться раньше 2024 года')
         .max(2099, 'Курс не должен начаться позднее 2099 года')
@@ -13,6 +13,8 @@ export const createCourseValidation = yup.object().shape({
         .required('Требования обязательны для заполнения'),
     annotations: yup.string()
         .required('Аннотации обязательны для заполнения'),
+    mainTeacherId: yup.string()
+        .required("У курса должен быть главный учитель")
 });
 
 export default createCourseValidation;

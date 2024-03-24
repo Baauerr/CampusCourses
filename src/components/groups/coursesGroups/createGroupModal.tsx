@@ -21,9 +21,6 @@ export const CreateModal = ({ open, handleClose, setUpdated }: CreateModalProps)
 
     const handleClick = async () => {
         try {
-
-
-
             await CoursesService.createGroup(textValue);
             setUpdated(true);
             handleClose();

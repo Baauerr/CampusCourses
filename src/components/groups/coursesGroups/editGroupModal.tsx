@@ -22,11 +22,14 @@ export const style = {
     top: '50%',
     left: '50%',
     transform: 'translate(-50%, -50%)',
-    width: 600,
-   // bgcolor: 'background.paper',
+    width: "80%",
+    maxWidth: "600px",
+    height: "auto",
+    maxHeight: "80%",
     boxShadow: 90,
     p: 6,
     borderRadius: 2,
+    overflowY: 'auto',
 };
 
 export const EditModal = ({ groupName, openEdit, handleClose, setUpdated, id }: EditModalProps) => {
