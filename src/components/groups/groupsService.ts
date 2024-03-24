@@ -1,9 +1,9 @@
 import { instance } from "../../api/axios"
 import { IResponseAccountInfoData } from "../../types/userTypes/accountTypes"
-import { IRequestCoursesData, IRequestCreateCourseData, IRequestGroupsCreateData, IResponseGroupsCoursesData } from "../../types/coursesTypes/groupCourses"
+import { IRequestCoursesData, IRequestCreateCourseData, IRequestGroupsCreateData, IResponseGroupsCoursesData } from "../../types/groupsTypes/groupCourses"
 import { IResponseUsersData } from "../../types/userTypes/userGettingTypes"
 
-export const CoursesService = {
+export const GroupsService = {
 
     async getCoursesGroups(): Promise<IResponseGroupsCoursesData[] | undefined> {
             const { data } = await instance.get<IResponseGroupsCoursesData[]>(`groups`)

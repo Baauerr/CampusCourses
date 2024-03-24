@@ -1,12 +1,11 @@
 
 import { Typography, Card, Button, InputLabel } from '@mui/material';
-import { CoursesService } from '../groupsService';
+import { GroupsService } from '../groupsService';
 import { useEffect, useState } from 'react';
 import Modal from '@mui/material/Modal';
 import TextField from '@mui/material/TextField';
 import IconButton from '@mui/material/IconButton';
 import CloseIcon from '@mui/icons-material/Close';
-import { style } from '../coursesGroups/editGroupModal';
 import { useFormik } from "formik";
 import Radio from '@mui/material/Radio';
 import RadioGroup from '@mui/material/RadioGroup';
@@ -18,6 +17,7 @@ import 'react-quill/dist/quill.snow.css';
 import createCourseValidation from '../../../helpers/validations/createCourseValidation';
 import { useParams } from 'react-router-dom';
 import { IResponseUsersData } from '../../../types/userTypes/userGettingTypes';
+import { style } from '../../modalWindows/styles';
 
 
 type CreateModalProps = {
@@ -63,7 +63,7 @@ export const CreateCourseModal = ({ open, handleClose, setUpdated }: CreateModal
 
     const submitValues = async (values: FormData, setSubmitting: { (isSubmitting: boolean): void; (arg0: boolean): void; }) => {
         try {
-            await CoursesService.createCourse(values, id);
+            await GroupsService.createCourse(values, id);
             setUpdated(true);
             handleClose();
         } catch (error: any) {
@@ -82,7 +82,7 @@ export const CreateCourseModal = ({ open, handleClose, setUpdated }: CreateModal
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const usersInfo = await CoursesService.getUsers();
+                const usersInfo = await GroupsService.getUsers();
                 if (usersInfo !== undefined) {
                     setUsers(usersInfo)
                 }
@@ -96,6 +96,7 @@ export const CreateCourseModal = ({ open, handleClose, setUpdated }: CreateModal
 
         fetchData();
     }, []);
+    
     return (<Modal
         open={open}
         onClose={handleClose}

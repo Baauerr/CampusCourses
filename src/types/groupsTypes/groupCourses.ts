@@ -1,3 +1,5 @@
+import { ICourseStatusesData, ISemesterData } from "../coursesTypes/courseTypes"
+
 export interface IResponseGroupsCoursesData {
     id: string,
     name: string
@@ -13,8 +15,8 @@ export interface IRequestCoursesData {
     startYear: number, 
     maximumStudentsCount: number,
     remainingSlotsCount: number, 
-    status: string, 
-    semester: string
+    status: ICourseStatusesData, 
+    semester: ISemesterData
 }
 
 export interface IRequestCreateCourseData {

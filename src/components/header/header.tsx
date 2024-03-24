@@ -10,6 +10,7 @@ import { useAppDispatch } from '../../store/hooks';
 import { logout } from '../../store/user/userSlice';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../store/store';
+import { useEffect, useState } from 'react';
 
 const theme = createTheme({
   typography: {
@@ -38,7 +39,7 @@ const Head = () => {
       <AppBar sx={{ backgroundColor: '#002C54' }}>
         <Toolbar sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
           <Typography variant="h5" component="div" sx={{ display: 'flex', alignItems: 'stretch', gap: '10px' }}>
-              Кампусные курсы
+            Кампусные курсы
             <UserRolePanel />
           </Typography>
           <UserPanel />
@@ -50,50 +51,63 @@ const Head = () => {
 
 
 export const UserPanel = () => {
-
-  const dispatch = useAppDispatch()
-
+  const isAuth = useAuth();
+  const dispatch = useAppDispatch();
   const navigate = useNavigate();
+  const [userEmail, setEmail] = useState<string>();
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const userInfo = await AuthService.getProfileInfo();
+      setEmail(userInfo?.email);
+    };
+    fetchData();
+  }, []);
 
   const handleClick = async (e: React.FormEvent<HTMLButtonElement>) => {
-
     e.preventDefault();
     e.stopPropagation();
 
     try {
-      await AuthService.logout()
+      await AuthService.logout();
       dispatch(logout());
-      navigate("/")
-    }
-    catch {
+      navigate("/");
+    } catch {
       console.log("bruh");
     }
-  }
+  };
 
-  const isAuth = useAuth();
   if (!isAuth) {
     return (
       <div>
         <Link to="/registration">
-          <Button variant="text" sx={{ color: 'white' }}>Регистрация</Button>
+          <Button variant="text" sx={{ color: "white" }}>
+            Регистрация
+          </Button>
         </Link>
         <Link to="/login">
-          <Button variant="text" sx={{ color: 'white' }}>Вход</Button>
+          <Button variant="text" sx={{ color: "white" }}>
+            Вход
+          </Button>
         </Link>
       </div>
-    )
-  }
-  else {
+    );
+  } else {
     return (
       <div>
         <Link to="/profile">
-          <Button variant="text" sx={{ color: 'white' }}>Профиль</Button>
+          <Button variant="text" sx={{ color: "white" }}>
+            {userEmail}
+          </Button>
         </Link>
-        <Button variant="text" sx={{ color: 'white' }} onClick={handleClick}>Выйти</Button>
+        <Button variant="text" sx={{ color: "white" }} onClick={handleClick}>
+          Выйти
+        </Button>
       </div>
-    )
+    );
   }
-}
+};
+
 
 const UserRolePanel = () => {
 

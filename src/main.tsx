@@ -11,6 +11,7 @@ import { store } from "./store/store.ts";
 import Profile from "./components/auth/profile/profile.tsx";
 import { CoursesGroup } from "./components/groups/coursesGroups/coursesGroup.tsx";
 import { ConcretteGroup } from "./components/groups/concretteGroup/concretteGroup.tsx";
+import { Course } from "./components/course/course.tsx";
 
 export const router = createBrowserRouter([
   {
@@ -36,6 +37,10 @@ export const router = createBrowserRouter([
       {
         path: "/groups/:id",
         element: <ConcretteGroup />,
+      },
+      {
+        path: "/courses/:id",
+        element: <Course />,
       },
     ]
   }

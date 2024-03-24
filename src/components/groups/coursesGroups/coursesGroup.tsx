@@ -1,7 +1,7 @@
 import Grid from '@mui/material/Grid';
 import { Typography, Card, Container, Link as MuiLink, Button } from '@mui/material';
-import { CoursesService } from '../groupsService';
-import { IResponseGroupsCoursesData } from "../../../types/coursesTypes/groupCourses"
+import { GroupsService } from '../groupsService';
+import { IResponseGroupsCoursesData } from "../../../types/groupsTypes/groupCourses"
 import { useEffect, useState } from 'react';
 import { Link as RouterLink } from 'react-router-dom';
 import { RootState } from '../../../store/store';
@@ -44,7 +44,7 @@ export const CoursesGroup = () => {
         if (updated) {
             const fetchData = async () => {
                 try {
-                    const groupsInfo = await CoursesService.getCoursesGroups();
+                    const groupsInfo = await GroupsService.getCoursesGroups();
                     setGroupsInfo(groupsInfo)
                 } catch (error) {
                     console.error(error);

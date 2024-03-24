@@ -1,13 +1,13 @@
 
 import { Typography, Card, Button } from '@mui/material';
-import { CoursesService } from '../groupsService';
-import { IRequestGroupsCreateData } from "../../../types/coursesTypes/groupCourses"
+import { GroupsService } from '../groupsService';
+import { IRequestGroupsCreateData } from "../../../types/groupsTypes/groupCourses"
 import { useEffect, useState } from 'react';
 import IconButton from '@mui/material/IconButton';
 import CloseIcon from '@mui/icons-material/Close';
-
 import Modal from '@mui/material/Modal';
 import TextField from '@mui/material/TextField';
+import { style } from '../../modalWindows/styles';
 
 type EditModalProps = {
     id: string
@@ -15,21 +15,6 @@ type EditModalProps = {
     openEdit: boolean;
     handleClose: () => void;
     setUpdated: React.Dispatch<React.SetStateAction<boolean>>;
-};
-
-export const style = {
-    position: 'absolute' as 'absolute',
-    top: '50%',
-    left: '50%',
-    transform: 'translate(-50%, -50%)',
-    width: "80%",
-    maxWidth: "600px",
-    height: "auto",
-    maxHeight: "80%",
-    boxShadow: 90,
-    p: 6,
-    borderRadius: 2,
-    overflowY: 'auto',
 };
 
 export const EditModal = ({ groupName, openEdit, handleClose, setUpdated, id }: EditModalProps) => {
@@ -43,7 +28,7 @@ export const EditModal = ({ groupName, openEdit, handleClose, setUpdated, id }: 
                 name: textValue.name
             }
 
-            await CoursesService.editGroup(updateInfo, id);
+            await GroupsService.editGroup(updateInfo, id);
             setUpdated(true);
             handleClose();
         } catch (error) {

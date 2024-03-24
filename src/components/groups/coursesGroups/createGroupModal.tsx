@@ -1,13 +1,13 @@
 
 import { Typography, Card, Button } from '@mui/material';
-import { CoursesService } from '../groupsService';
-import { IRequestGroupsCreateData } from "../../../types/coursesTypes/groupCourses"
+import { GroupsService } from '../groupsService';
+import { IRequestGroupsCreateData } from "../../../types/groupsTypes/groupCourses"
 import { useState } from 'react';
 import Modal from '@mui/material/Modal';
 import TextField from '@mui/material/TextField';
-import { style } from './editGroupModal';
 import IconButton from '@mui/material/IconButton';
 import CloseIcon from '@mui/icons-material/Close';
+import { style } from '../../modalWindows/styles';
 
 type CreateModalProps = {
     open: boolean;
@@ -21,7 +21,7 @@ export const CreateModal = ({ open, handleClose, setUpdated }: CreateModalProps)
 
     const handleClick = async () => {
         try {
-            await CoursesService.createGroup(textValue);
+            await GroupsService.createGroup(textValue);
             setUpdated(true);
             handleClose();
         } catch (error) {

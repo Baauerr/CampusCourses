@@ -1,9 +1,10 @@
 
 import { Typography, Card, Button } from '@mui/material';
-import { CoursesService } from '../groupsService';
+import { GroupsService } from '../groupsService';
 import IconButton from '@mui/material/IconButton';
 import CloseIcon from '@mui/icons-material/Close';
 import Modal from '@mui/material/Modal';
+import { style } from '../../modalWindows/styles';
 
 type EditModalProps = {
     id: string
@@ -13,25 +14,12 @@ type EditModalProps = {
     setUpdated: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
-export const style = {
-    position: 'absolute' as 'absolute',
-    top: '50%',
-    left: '50%',
-    transform: 'translate(-50%, -50%)',
-    width: 400,
-    bgcolor: 'background.paper',
-    border: '1px solid #000',
-    boxShadow: 90,
-    p: 6,
-    borderRadius: 2,
-};
-
 export const EditModal = ({ groupName, openDelete, handleCloseDelete, setUpdated, id }: EditModalProps) => {
 
 
     const handleClick = async () => {
         try {
-            await CoursesService.deleteGroup(id);
+            await GroupsService.deleteGroup(id);
             setUpdated(true);
             handleCloseDelete();
         } catch (error) {

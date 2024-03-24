@@ -1,17 +1,17 @@
 import Grid from '@mui/material/Grid';
 import { Typography, Card, Container, Link as MuiLink, Button} from '@mui/material';
-import { CoursesService } from '../groupsService';
+import { GroupsService } from '../groupsService';
 import { useEffect, useState } from 'react';
-import { IRequestCoursesData } from '../../../types/coursesTypes/groupCourses';
+import { IRequestCoursesData } from '../../../types/groupsTypes/groupCourses';
 import { useParams } from 'react-router-dom';
-import seasonTranslator from '../../../helpers/coursesHelper/semesterHelper';
 import statusColorHelper from '../../../helpers/coursesHelper/statusColorHelper';
-import statusTranslator from '../../../helpers/coursesHelper/statusHelper';
 import { cardHoverStyles } from '../coursesGroups/coursesGroup';
 import { Link as RouterLink } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../../store/store';
 import { CreateCourseModal } from './createCoursModal';
+import seasonTranslator from '../../../helpers/coursesHelper/semesterHelper';
+import statusTranslator from '../../../helpers/coursesHelper/statusHelper';
 
 export const ConcretteGroup = () => {
 
@@ -30,7 +30,7 @@ export const ConcretteGroup = () => {
         if (updated){
             const fetchData = async () => {
                 try {
-                    const groupsInfo = await CoursesService.getCourses(id);
+                    const groupsInfo = await GroupsService.getCourses(id);
                     if (groupsInfo !== undefined) {
                         setGroupsInfo(groupsInfo)
                     }
@@ -57,7 +57,7 @@ export const ConcretteGroup = () => {
                 (
                     <MuiLink
                         component={RouterLink}
-                        to={`/groups/${item.id}`}
+                        to={`/courses/${item.id}`}
                         underline="none"
                         key={item.id}
                         color={'black'}
