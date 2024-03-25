@@ -54,12 +54,13 @@ export const UserPanel = () => {
   const isAuth = useAuth();
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
-  const [userEmail, setEmail] = useState<string>();
 
   useEffect(() => {
     const fetchData = async () => {
       const userInfo = await AuthService.getProfileInfo();
-      setEmail(userInfo?.email);
+      if (userInfo) {
+        localStorage.setItem("email", userInfo.email)
+      }
     };
     fetchData();
   }, []);
@@ -97,7 +98,7 @@ export const UserPanel = () => {
       <div>
         <Link to="/profile">
           <Button variant="text" sx={{ color: "white" }}>
-            {userEmail}
+            {localStorage.getItem("email")}
           </Button>
         </Link>
         <Button variant="text" sx={{ color: "white" }} onClick={handleClick}>

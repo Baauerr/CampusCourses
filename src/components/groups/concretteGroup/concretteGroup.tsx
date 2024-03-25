@@ -9,9 +9,10 @@ import { cardHoverStyles } from '../coursesGroups/coursesGroup';
 import { Link as RouterLink } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../../store/store';
-import { CreateCourseModal } from './createCoursModal';
+import { CreateCourseModal } from './createCourseModal';
 import seasonTranslator from '../../../helpers/coursesHelper/semesterHelper';
 import statusTranslator from '../../../helpers/coursesHelper/statusHelper';
+import { typesOfModal } from '../../../types/coursesTypes/courseTypes';
 
 export const ConcretteGroup = () => {
 
@@ -76,7 +77,7 @@ export const ConcretteGroup = () => {
                     </MuiLink>
                 ))}
             </Grid>
-            <CreateCourseModal setUpdated={setUpdated} open={open} handleClose={handleClose} />
+            <CreateCourseModal setUpdated={setUpdated} open={open} handleClose={handleClose} typeOfModal={typesOfModal.createCourse} />
         </Container>
     )
 }

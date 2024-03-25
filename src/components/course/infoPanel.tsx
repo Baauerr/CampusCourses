@@ -3,13 +3,24 @@ import { Skeleton } from '@mui/material';
 import statusColorHelper from '../../helpers/coursesHelper/statusColorHelper';
 import statusTranslator from '../../helpers/coursesHelper/statusHelper';
 import { Typography, Card, Button, Grid } from '@mui/material';
-import { IResponseCourseInfoData } from '../../types/coursesTypes/courseTypes';
+import { ICourseRoleData, IResponseCourseInfoData, typesOfModal } from '../../types/coursesTypes/courseTypes';
+import CreateCourseModal from '../groups/concretteGroup/createCourseModal';
+import { SetStateAction, useEffect, useState } from 'react';
+import { getUserCourseRole } from '../../helpers/coursesHelper/courseRoleHelper';
+import { UsersInfoTabs } from './userTab';
 
 export interface InfoPanelProps {
     courseInfo?: IResponseCourseInfoData;
+    setUpdated: React.Dispatch<React.SetStateAction<boolean>>;
+    courseRole?: ICourseRoleData
 }
 
-export const InfoPanel = ({ courseInfo }: InfoPanelProps) => {
+export const InfoPanel = ({ courseInfo, setUpdated, courseRole}: InfoPanelProps) => {
+
+    const [open, setOpen] = useState(false);
+
+    const handleOpen = () => setOpen(true);
+    const handleClose = () => setOpen(false);
 
     if (!courseInfo) {
         return (
@@ -26,7 +37,7 @@ export const InfoPanel = ({ courseInfo }: InfoPanelProps) => {
         <div>
             <Grid item container xs={12} md={12} sx={{ marginBottom: "10px" }} justifyContent="space-between">
                 <Typography variant="h5" fontWeight="bold" fontFamily={'Roboto, sans-serif'}>Основные данные курса</Typography>
-                <Button variant="contained" color={"warning"}>
+                <Button variant="contained" color={"warning"} onClick={handleOpen}>
                     редактировать
                 </Button>
             </Grid>
@@ -66,6 +77,7 @@ export const InfoPanel = ({ courseInfo }: InfoPanelProps) => {
                     <Typography fontSize={15} textAlign="left">{courseInfo.studentsInQueueCount}</Typography>
                 </Grid>
             </Card>
-        </div >
+            <CreateCourseModal open={open} handleClose={handleClose} setUpdated={setUpdated} typeOfModal={typesOfModal.editCourse} role={courseRole} currentCourseInfo={courseInfo} />
+        </div>
     )
 }

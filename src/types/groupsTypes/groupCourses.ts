@@ -24,7 +24,7 @@ export interface IRequestCreateCourseData {
     startYear: number, 
     maximumStudentsCount: number,
     semester: string, 
-    mainTeacherId: string,
+    mainTeacherId?: string,
     annotations: string,
     requirements: string,
 }

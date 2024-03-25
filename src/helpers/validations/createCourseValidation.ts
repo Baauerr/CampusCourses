@@ -13,8 +13,6 @@ export const createCourseValidation = yup.object().shape({
         .required('Требования обязательны для заполнения'),
     annotations: yup.string()
         .required('Аннотации обязательны для заполнения'),
-    mainTeacherId: yup.string()
-        .required("У курса должен быть главный учитель")
 });
 
 export default createCourseValidation;

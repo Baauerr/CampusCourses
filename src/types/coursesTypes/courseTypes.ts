@@ -35,11 +35,15 @@ export interface ICourseNotificationsData {
 }
 
 export enum IResultsStatusesData {
-
+    "Failed" = "Провалена",
+    "Passed" = "Сдана",
+    "NotDefined" = "Оценка не выставлена"
 }
 
 export enum IAcceptanceStatusesData {
-
+    "InQueue" = "В очереди",
+    "Declined" = "Отклонено",
+    "Accepted" = "Принято"
 }
 
 export enum ISemesterData{
@@ -52,4 +56,18 @@ export enum ICourseStatusesData{
     "Finished" = "Закрыт",
     "Started" = "В процессе обучения",
     "OpenForAssigning" = "Открыт для записи"
+}
+
+export interface ICourseRoleData {
+    isAdmin: boolean,
+    isTeacher: boolean,
+    isMainTeacher: boolean
+    isStudent: boolean
+    isPotentialStudent: boolean
+    isGuest: boolean
+}
+
+export enum typesOfModal {
+    createCourse,
+    editCourse
 }

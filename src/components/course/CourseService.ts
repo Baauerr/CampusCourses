@@ -1,6 +1,6 @@
 import { instance } from "../../api/axios"
 import { IResponseAccountInfoData } from "../../types/userTypes/accountTypes"
-import { IRequestGroupsCreateData } from "../../types/groupsTypes/groupCourses"
+import { IRequestCreateCourseData, IRequestGroupsCreateData } from "../../types/groupsTypes/groupCourses"
 import { IResponseCourseInfoData } from "../../types/coursesTypes/courseTypes"
 import { ICreateNotificationData } from "../../types/coursesTypes/createNotificationType"
 
@@ -32,4 +32,10 @@ export const CourseService = {
         }
     },
 
+    async changeCourseInfo(createData: IRequestCreateCourseData, id?: string){ 
+        const {data} = await instance.put(`courses/${id}`, createData)
+        if (data){
+            return data
+        }
+    },
 }

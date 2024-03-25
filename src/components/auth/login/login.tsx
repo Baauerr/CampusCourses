@@ -31,7 +31,6 @@ export const Login = () => {
             try {
                 const loginResponse = await AuthService.login(values);
 
-
                 if (loginResponse) {
                     setServerError('');
                     setTokenToLocalStorage(loginResponse.token)
