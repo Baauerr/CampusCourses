@@ -3,7 +3,7 @@ import { Dispatch, useState } from 'react';
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 import { Skeleton } from '@mui/material';
-import { IResponseCourseInfoData } from '../../types/coursesTypes/courseTypes';
+import { ICourseRoleData, IResponseCourseInfoData } from '../../types/coursesTypes/courseTypes';
 import { CreateNotification } from './createNotification';
 
 function TabPanel(props: any) {
@@ -29,9 +29,10 @@ function TabPanel(props: any) {
 export interface CourseInfoTabsProps {
     courseInfo?: IResponseCourseInfoData;
     setUpdated: Dispatch<React.SetStateAction<boolean>>;
+    courseRole?: ICourseRoleData;
 }
 
-export const CourseInfoTabs = ({ courseInfo, setUpdated }: CourseInfoTabsProps) => {
+export const CourseInfoTabs = ({ courseInfo, setUpdated, courseRole }: CourseInfoTabsProps) => {
 
     const [open, setOpen] = useState(false);
     const handleOpen = () => setOpen(true);
@@ -83,9 +84,11 @@ export const CourseInfoTabs = ({ courseInfo, setUpdated }: CourseInfoTabsProps) 
                 id={`wrapped-tabpanel-three`}
                 aria-labelledby={"wrapped-tab-three"}
             >
-                <Button variant="contained" color={"primary"} sx={{ marginLeft: '25px', marginTop: '25px' }} onClick={handleOpen}>
-                    Создать уведомление
-                </Button>
+                {courseRole?.isTeacher &&
+                    <Button variant="contained" color={"primary"} sx={{ marginLeft: '25px', marginTop: '25px' }} onClick={handleOpen}>
+                        Создать уведомление
+                    </Button>
+                }
                 {value === "three" && (
                     <Box sx={{ p: 3 }}>
                         {courseInfo?.notifications.map((notification, index) => (

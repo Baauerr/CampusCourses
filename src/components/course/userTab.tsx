@@ -6,10 +6,11 @@ import { Skeleton } from '@mui/material';
 import { ICourseRoleData, ICourseStudentsData, ICourseTeachersData } from '../../types/coursesTypes/courseTypes';
 import { CreateNotification } from './createNotification';
 import { StudentsTab } from './studentsTab';
+import { TeachersTab } from './teachersTab';
 
 export interface CourseInfoTabsProps {
     studentsArray: ICourseStudentsData[];
-    teachersArray?: ICourseTeachersData[];
+    teachersArray: ICourseTeachersData[];
     setUpdated: Dispatch<React.SetStateAction<boolean>>;
     roles?: ICourseRoleData;
 }
@@ -20,7 +21,7 @@ export const UsersInfoTabs = ({ studentsArray, teachersArray, setUpdated, roles 
     const handleOpen = () => setOpen(true);
     const handleClose = () => setOpen(false);
 
-    const [value, setValue] = useState('one');
+    const [value, setValue] = useState('five');
 
     if (!studentsArray && !teachersArray) {
         return (
@@ -46,18 +47,16 @@ export const UsersInfoTabs = ({ studentsArray, teachersArray, setUpdated, roles 
                 aria-label="wrapped label tabs example"
             >
                 <Tab
-                    value="one"
+                    value="five"
                     label="Преподаватели"
                     wrapped
                 />
-                <Tab value="two" label="Студенты" />
+                <Tab value="four" label="Студенты" />
             </Tabs>
             <Divider orientation="horizontal" />
-            <StudentsTab value={value} index={"two"} studentsList={studentsArray} role={roles}/>
-            {/* <TabPanel value={value} htmlString={courseInfo?.requirements} index="one">
-                <Typography>{courseInfo?.requirements}</Typography>
-            </TabPanel> */}
-            
+            <StudentsTab value={value} index={"four"} studentsList={studentsArray} role={roles}/>
+            <TeachersTab value={value} index={"five"} teachersList={teachersArray} role={roles}/>
+
             <CreateNotification open={open} handleClose={handleClose} setUpdated={setUpdated} />
         </div>
     )

@@ -35,27 +35,27 @@ export interface ICourseNotificationsData {
 }
 
 export enum IResultsStatusesData {
-    "Failed" = "Провалена",
-    "Passed" = "Сдана",
-    "NotDefined" = "Оценка не выставлена"
+    "Failed" = "Failed",
+    "Passed" = "Passed",
+    "NotDefined" = "NotDefined"
 }
 
 export enum IAcceptanceStatusesData {
-    "InQueue" = "В очереди",
-    "Declined" = "Отклонено",
-    "Accepted" = "Принято"
+    "InQueue" = "InQueue",
+    "Declined" = "Declined",
+    "Accepted" = "Accepted"
 }
 
 export enum ISemesterData{
-    "Spring" = "Весна",
-    "Autumn" = "Осень"
+    "Spring" = "Spring",
+    "Autumn" = "Autumn"
 }
 
 export enum ICourseStatusesData{
-    "Created" = "Создан",
-    "Finished" = "Закрыт",
-    "Started" = "В процессе обучения",
-    "OpenForAssigning" = "Открыт для записи"
+    "Created" = "Created",
+    "Finished" = "Finished",
+    "Started" = "Started",
+    "OpenForAssigning" = "OpenForAssigning"
 }
 
 export interface ICourseRoleData {
