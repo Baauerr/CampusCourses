@@ -34,8 +34,6 @@ export const CoursesGroup = () => {
     const roles = useSelector((state: RootState) => state.user.roles);
     const isAuth = useAuth();
 
-
-
     const handleOpen = () => setOpen(true);
     const handleClose = () => setOpen(false);
     
@@ -130,9 +128,10 @@ const EditButtons = ({ roles, setUpdated, groupName, id }: EditButtonsProps) => 
                 </>
             )} 
             <EditModal setUpdated={setUpdated} openEdit={openEdit} handleClose={handleCloseEdit} groupName={groupName} id = {id} />
-            <DeleteModal setUpdated={setUpdated} openDelete={openDelete} handleCloseDelete={handleCloseDelete} groupName={groupName} id = {id} />
+            <DeleteModal setUpdated={setUpdated} openDelete={openDelete} handleCloseDelete={handleCloseDelete} name={groupName} deleteRequestFunction={() => GroupsService.deleteGroup(id)}  />
         </>
     );
 };
+
 
 

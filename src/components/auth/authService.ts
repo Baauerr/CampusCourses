@@ -58,5 +58,6 @@ export const AuthService = {
     async logout() {
         await instance.post('logout');
         removeTokenFromLocalStorage();
+        localStorage.removeItem("email")
     }
 }

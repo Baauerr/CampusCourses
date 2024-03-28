@@ -61,7 +61,6 @@ export const CreateCourseModal = ({ open, handleClose, setUpdated, typeOfModal, 
         },
     });
 
-
     useEffect(() => {
         if (currentCourseInfo !== undefined) {
             const mappedCourseInfo = courseMapper(currentCourseInfo)

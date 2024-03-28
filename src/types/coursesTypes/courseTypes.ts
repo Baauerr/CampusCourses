@@ -71,3 +71,26 @@ export enum typesOfModal {
     createCourse,
     editCourse
 }
+
+export interface IRequestChangeCourseStatusData {
+    status: ICourseStatusesData
+}
+
+export interface IRequestChangeUserStatusData {
+    status: IAcceptanceStatusesData
+}
+
+export interface IRequestAddNewTeacher {
+    userId?: string
+}
+
+
+export enum MarkType {
+    "Midterm" = "Midterm",
+    "Final" = "Final"
+}
+
+export interface IRequestSetMarkData {
+    markType: MarkType,
+    mark: IResultsStatusesData
+}

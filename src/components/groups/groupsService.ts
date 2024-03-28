@@ -1,7 +1,7 @@
 import { instance } from "../../api/axios"
-import { IResponseAccountInfoData } from "../../types/userTypes/accountTypes"
 import { IRequestCoursesData, IRequestCreateCourseData, IRequestGroupsCreateData, IResponseGroupsCoursesData } from "../../types/groupsTypes/groupCourses"
 import { IResponseUsersData } from "../../types/userTypes/userGettingTypes"
+import { IRequestChangeCourseStatusData } from "../../types/coursesTypes/courseTypes"
 
 export const GroupsService = {
 
@@ -20,7 +20,7 @@ export const GroupsService = {
         return data
     },
 
-    async deleteGroup(id: string): Promise<IResponseAccountInfoData | undefined> { 
+    async deleteGroup(id: string): Promise<void> { 
         const {data} = await instance.delete(`groups/${id}`)
         if (data){
             return data
@@ -43,6 +43,13 @@ export const GroupsService = {
 
     async getUsers(): Promise<IResponseUsersData[] | undefined> { 
         const {data} = await instance.get('users')
+        if (data){
+            return data
+        }
+    },
+
+    async changeStatus(id: string, status: IRequestChangeCourseStatusData) { 
+        const {data} = await instance.post(`courses/${id}/status`, status)
         if (data){
             return data
         }

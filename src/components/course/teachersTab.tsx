@@ -1,15 +1,19 @@
 import { Typography, Box, Card, Grid, Button } from '@mui/material';
-import { ICourseRoleData, ICourseTeachersData } from '../../types/coursesTypes/courseTypes';
-import { useState } from 'react';
+import { ICourseRoleData, ICourseStudentsData, ICourseTeachersData } from '../../types/coursesTypes/courseTypes';
+import { SetStateAction, useState } from 'react';
+import AddTeacherModal from './addTeacherModal';
 
 export interface TeachersPanelProps {
     value: string;
     index: string;
     teachersList: ICourseTeachersData[];
+    studentsList: ICourseStudentsData[];
     role?: ICourseRoleData;
+    courseId?: string
+    setUpdated: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-export const TeachersTab = ({ value, index, teachersList, role }: TeachersPanelProps) => {
+export const TeachersTab = ({ value, index, teachersList, role, studentsList, setUpdated, courseId }: TeachersPanelProps) => {
 
     const [open, setOpen] = useState(false);
     const handleOpen = () => setOpen(true);
@@ -44,7 +48,9 @@ export const TeachersTab = ({ value, index, teachersList, role }: TeachersPanelP
                         </Box>
                     ))}
                 </Box>
+                
             )}
+            <AddTeacherModal id={courseId} openEdit={open} handleClose= {handleClose} setUpdated={setUpdated} teachersArray={teachersList} studentsArray={studentsList}/>
         </div>
     )
 }

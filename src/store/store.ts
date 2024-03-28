@@ -1,11 +1,9 @@
 import { configureStore } from '@reduxjs/toolkit'
 import userReducer from './user/userSlice'
-import courseRolesReducer from './course/courseSlice'
 
 export const store = configureStore({
   reducer: {
     user: userReducer,
-    courseRoles: courseRolesReducer,
   },
 })
 

@@ -13,9 +13,10 @@ export interface CourseInfoTabsProps {
     teachersArray: ICourseTeachersData[];
     setUpdated: Dispatch<React.SetStateAction<boolean>>;
     roles?: ICourseRoleData;
+    courseId?: string
 }
 
-export const UsersInfoTabs = ({ studentsArray, teachersArray, setUpdated, roles }: CourseInfoTabsProps) => {
+export const UsersInfoTabs = ({ studentsArray, teachersArray, setUpdated, roles, courseId }: CourseInfoTabsProps) => {
 
     const [open, setOpen] = useState(false);
     const handleOpen = () => setOpen(true);
@@ -54,8 +55,23 @@ export const UsersInfoTabs = ({ studentsArray, teachersArray, setUpdated, roles 
                 <Tab value="four" label="Студенты" />
             </Tabs>
             <Divider orientation="horizontal" />
-            <StudentsTab value={value} index={"four"} studentsList={studentsArray} role={roles}/>
-            <TeachersTab value={value} index={"five"} teachersList={teachersArray} role={roles}/>
+            <StudentsTab
+                value={value}
+                index={"four"}
+                studentsList={studentsArray}
+                role={roles}
+                courseId={courseId}
+                setUpdated={setUpdated}
+            />
+            <TeachersTab
+                value={value}
+                index={"five"}
+                teachersList={teachersArray}
+                role={roles}
+                setUpdated={setUpdated}
+                studentsList={studentsArray}
+                courseId={courseId}
+            />
 
             <CreateNotification open={open} handleClose={handleClose} setUpdated={setUpdated} />
         </div>

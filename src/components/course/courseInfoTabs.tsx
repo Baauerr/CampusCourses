@@ -51,6 +51,9 @@ export const CourseInfoTabs = ({ courseInfo, setUpdated, courseRole }: CourseInf
         );
     }
 
+
+    
+
     const handleChange = (event: React.SyntheticEvent, newValue: string) => {
         setValue(newValue);
     };

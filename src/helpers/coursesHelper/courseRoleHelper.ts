@@ -1,10 +1,7 @@
-import { useSelector } from "react-redux";
-import { AuthService } from "../../components/auth/authService"
-import { RootState } from "../../store/store";
 import { IAcceptanceStatusesData, ICourseRoleData, ICourseStudentsData, ICourseTeachersData } from "../../types/coursesTypes/courseTypes";
 import { IUserRolesData } from "../../types/userTypes/roleTypes";
 
-export const getUserCourseRole = async (studentsArray: ICourseStudentsData[], teachersArray: ICourseTeachersData[], roles: IUserRolesData): Promise<ICourseRoleData> => {
+export const getUserCourseRole = (studentsArray: ICourseStudentsData[], teachersArray: ICourseTeachersData[], roles: IUserRolesData): ICourseRoleData => {
     const userEmail = localStorage.getItem("email")
 
     const userRoles: ICourseRoleData = {
@@ -32,7 +29,7 @@ export const getUserCourseRole = async (studentsArray: ICourseStudentsData[], te
         }
         return userRoles;
     }
-
+    console.log()
     const isStudent = studentsArray.some(student => student.email === userEmail && student.status === IAcceptanceStatusesData.Accepted);
     if (isStudent) {
         userRoles.isStudent = true;
