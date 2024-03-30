@@ -21,6 +21,8 @@ export const getUserCourseRole = (studentsArray: ICourseStudentsData[], teachers
     }
 
     const isTeacher = teachersArray.some(teacher => teacher.email === userEmail);
+    console.log(teachersArray)
+    console.log(userEmail)
     if (isTeacher) {
         userRoles.isTeacher = true;
         const isMainTeacher = teachersArray.some(teacher => teacher.email === userEmail && teacher.isMain);
@@ -29,7 +31,7 @@ export const getUserCourseRole = (studentsArray: ICourseStudentsData[], teachers
         }
         return userRoles;
     }
-    console.log()
+
     const isStudent = studentsArray.some(student => student.email === userEmail && student.status === IAcceptanceStatusesData.Accepted);
     if (isStudent) {
         userRoles.isStudent = true;

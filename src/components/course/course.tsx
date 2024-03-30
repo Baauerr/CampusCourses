@@ -17,7 +17,7 @@ export const Course = () => {
     const { id } = useParams();
     const [updated, setUpdated] = useState(true)
     const [courseRoles, setCourseRole] = useState<ICourseRoleData>();
-    
+
     const dispatch = useDispatch();
 
     useEffect(() => {
@@ -49,7 +49,18 @@ export const Course = () => {
     return (
         <Container maxWidth="lg">
             <Grid item xs={12} md={12}>
-                <Typography variant="h2" fontWeight="bold" fontFamily={'Roboto, sans-serif'} sx={{ marginBottom: "20px" }}>{courseInfo?.name}</Typography>
+                    <Typography
+                        variant="h2"
+                        fontWeight="bold"
+                        fontFamily={'Roboto, sans-serif'}
+                        sx={{
+                            marginBottom: "20px",
+                            maxWidth: "100%",
+                            overflowWrap: "break-word"
+                        }}
+                    >
+                        {courseInfo?.name}
+                    </Typography>
                 <InfoPanel courseInfo={courseInfo} setUpdated={setUpdated} courseRole={courseRoles} courseId={id} />
                 <CourseInfoTabs courseInfo={courseInfo} setUpdated={setUpdated} courseRole={courseRoles} />
                 {courseInfo && (

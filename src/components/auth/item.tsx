@@ -9,6 +9,7 @@ export const Item = styled(Paper)(({ theme }) => ({
     paddingLeft: '30px',
     paddingBottom: '30px',
     paddingTop: '5px',
+    
 }));
 
 export default Item;

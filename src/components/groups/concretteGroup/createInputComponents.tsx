@@ -24,6 +24,27 @@ const QuillField = ({ name, setFieldValue, value }: { name: string, setFieldValu
                 theme="snow"
                 value={value}
                 onChange={handleChange}
+                modules={{
+                    toolbar: [
+                      [{ header: [1, 2, false] }],
+                      ['bold', 'italic', 'underline', 'strike'],       
+                      ['blockquote', 'code-block'],
+            
+                      [{ list: 'ordered' }, { list: 'bullet' }],
+                      [{ script: 'sub' }, { script: 'super' }],     
+                      [{ indent: '-1' }, { indent: '+1' }],         
+                      [{ direction: 'rtl' }],                        
+                      [{ color: [] }, { background: [] }],          
+                      [{ font: [] }],
+                      [{ align: [] }],
+                      ['clean'],                                         
+                      ['link', 'image', 'video']                         
+                    ],
+                  }}
+                  formats={[
+                    'header', 'font', 'size', 'bold', 'italic', 'underline', 'strike', 
+                    'blockquote', 'list', 'bullet', 'indent', 'link', 'image', 'video'
+                  ]}
             />
         </div>
     );
@@ -31,7 +52,7 @@ const QuillField = ({ name, setFieldValue, value }: { name: string, setFieldValu
 
 type InputsNameProps = {
     formik: FormikProps<IRequestCreateCourseData>;
-    serverError: string 
+    serverError: string
 };
 
 type InputProps = {
@@ -55,13 +76,13 @@ type CourseInputProps = {
 export const CourseInputs = ({ formik, typeOfModal, serverError, users, role }: CourseInputProps) => {
     return (
         <div>
-            {(role?.isAdmin  || typeOfModal == typesOfModal.createCourse) && <InputName formik={formik} serverError={serverError}/>}
-            {(role?.isAdmin  || typeOfModal == typesOfModal.createCourse) && <InputStart formik={formik}/>}
-            {(role?.isAdmin  || typeOfModal == typesOfModal.createCourse) && <InputMaximumStudentsCount formik={formik}/>}
-            {(role?.isAdmin  || typeOfModal == typesOfModal.createCourse) && <InputSemester formik={formik}/>}
-            {((role?.isTeacher || role?.isAdmin) || typeOfModal == typesOfModal.createCourse) && <InputRequirements formik={formik}/>}
-            {((role?.isTeacher || role?.isAdmin) || typeOfModal == typesOfModal.createCourse) && <InputAnnotation formik={formik}/>}
-            {(typeOfModal == typesOfModal.createCourse) && <InputMainTeacher formik={formik} users={users} typeOfModal={typeOfModal}/>}
+            {(role?.isAdmin || typeOfModal == typesOfModal.createCourse) && <InputName formik={formik} serverError={serverError} />}
+            {(role?.isAdmin || typeOfModal == typesOfModal.createCourse) && <InputStart formik={formik} />}
+            {(role?.isAdmin || typeOfModal == typesOfModal.createCourse) && <InputMaximumStudentsCount formik={formik} />}
+            {(role?.isAdmin || typeOfModal == typesOfModal.createCourse) && <InputSemester formik={formik} />}
+            {((role?.isTeacher || role?.isAdmin) || typeOfModal == typesOfModal.createCourse) && <InputRequirements formik={formik} />}
+            {((role?.isTeacher || role?.isAdmin) || typeOfModal == typesOfModal.createCourse) && <InputAnnotation formik={formik} />}
+            {(typeOfModal == typesOfModal.createCourse) && <InputMainTeacher formik={formik} users={users} typeOfModal={typeOfModal} />}
         </div>
     );
 };
@@ -134,10 +155,16 @@ const InputSemester = ({ formik }: InputProps) => {
 };
 
 const InputRequirements = ({ formik }: InputProps) => {
+
     return (
         <div>
             <InputLabel sx={{ marginTop: 1 }}>Требования (обязательно)</InputLabel>
-            <QuillField name="requirements" setFieldValue={formik.setFieldValue} value={formik.values.requirements} />
+            <QuillField
+                name="requirements"
+                setFieldValue={formik.setFieldValue}
+                value={formik.values.requirements}
+                
+            />
         </div>
     );
 };
@@ -159,7 +186,7 @@ const InputMainTeacher = ({ formik, users, typeOfModal }: SelectTeacherProps) =>
                 variant="outlined"
                 id="mainTeacherId"
                 fullWidth
-                disabled = {typeOfModal === typesOfModal.editCourse ? true : false}
+                disabled={typeOfModal === typesOfModal.editCourse ? true : false}
                 {...formik.getFieldProps("mainTeacherId")}
                 error={formik.touched.mainTeacherId && Boolean(formik.errors.mainTeacherId)}
             >

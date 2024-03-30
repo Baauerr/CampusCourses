@@ -2,7 +2,7 @@ import { Typography, Box, Card, Grid, Button } from '@mui/material';
 import { IAcceptanceStatusesData, ICourseRoleData, ICourseStudentsData, IRequestChangeUserStatusData, IResultsStatusesData, MarkType } from '../../types/coursesTypes/courseTypes';
 import { acceptanceColor, acceptanceTranslator, markColor, markTranslator } from '../../helpers/coursesHelper/studentsHelper';
 import { CourseService } from './CourseService';
-import { SetStateAction, useState } from 'react';
+import { useState } from 'react';
 import SetGradeModal from './setGradeModal';
 
 export interface StudentsPanelProps {
@@ -12,7 +12,12 @@ export interface StudentsPanelProps {
     role?: ICourseRoleData;
     courseId?: string
     setUpdated: React.Dispatch<React.SetStateAction<boolean>>;
+}
 
+export interface MarkInfo {
+    markValue: IResultsStatusesData
+    markType: MarkType
+    studentId: string
 }
 
 export const StudentsTab = ({ value, index, studentsList, role, courseId, setUpdated }: StudentsPanelProps) => {
@@ -20,8 +25,11 @@ export const StudentsTab = ({ value, index, studentsList, role, courseId, setUpd
     const email = localStorage.getItem("email")
 
     const [open, setOpen] = useState(false);
+    const [markInfo, setMarkInfo] = useState<MarkInfo>();
     const handleOpen = () => setOpen(true);
     const handleClose = () => setOpen(false);
+
+    console.log(role)
 
     const handleChangeStatus = async (studentId: string, newStatus: IAcceptanceStatusesData, courseId?: string) => {
         const status: IRequestChangeUserStatusData = {
@@ -31,11 +39,17 @@ export const StudentsTab = ({ value, index, studentsList, role, courseId, setUpd
         setUpdated(true);
     }
 
-    const handleSetMark = (studentId: string, oldGrade: IResultsStatusesData, markType: MarkType) => {
-        handleOpen()
-        SetGradeModal({open, handleClose, setUpdated, courseId, studentId, oldGrade, markType})
+    const handleSetMark = (oldGrade: IResultsStatusesData, markType: MarkType, studentId: string) => {
+        if (oldGrade && markType) {
+            const mark: MarkInfo = {
+                markValue: oldGrade,
+                markType: markType,
+                studentId: studentId
+            }
+            setMarkInfo(mark);
+            handleOpen();
+        }
     }
-    
 
     return (
         <div
@@ -62,7 +76,12 @@ export const StudentsTab = ({ value, index, studentsList, role, courseId, setUpd
                                                 <Typography
                                                     fontSize={15}
                                                     color={markColor(student.midtermResult)}
-                                                    onClick={() => handleSetMark(student.id, student.midtermResult, MarkType.Midterm)}
+                                                    onClick={() => {
+                                                        if (role?.isTeacher) {
+                                                            handleSetMark(student.midtermResult, MarkType.Midterm, student.id);
+                                                        }
+                                                    }}
+                                                    style={role?.isTeacher ? { cursor: 'pointer' } : { cursor: 'default' }}
                                                 >
                                                     {markTranslator(student.midtermResult)}
                                                 </Typography>
@@ -72,7 +91,12 @@ export const StudentsTab = ({ value, index, studentsList, role, courseId, setUpd
                                                 <Typography
                                                     fontSize={15}
                                                     color={markColor(student.finalResult)}
-                                                    onClick={() => handleSetMark(student.id, student.finalResult, MarkType.Final)}
+                                                    onClick={() => {
+                                                        if (role?.isTeacher) {
+                                                            handleSetMark(student.finalResult, MarkType.Final, student.id);
+                                                        }
+                                                    }}
+                                                    style={role?.isTeacher ? { cursor: 'pointer' } : { cursor: 'default' }}
                                                 >
                                                     {(markTranslator(student.finalResult))}
                                                 </Typography>
@@ -107,14 +131,11 @@ export const StudentsTab = ({ value, index, studentsList, role, courseId, setUpd
                                     }
                                 </Grid>
                             </Card>
-                            <SetGradeModal open={false} handleClose={handleClose} setUpdated={setUpdated} oldGrade={student.} markType={}/>
+                            {open && <SetGradeModal open={open} handleClose={handleClose} courseId = {courseId} studentId = {markInfo?.studentId} setUpdated={setUpdated} oldGrade={markInfo?.markValue} markType={markInfo?.markType} />}
                         </Box>
-                        
                     ))}
                 </Box>
-               
             )}
-            
         </div>
     )
 }

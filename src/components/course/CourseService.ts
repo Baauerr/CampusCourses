@@ -66,6 +66,7 @@ export const CourseService = {
     },
 
     async setUserMark(markInfo: IRequestSetMarkData, courseId?: string, studentId?: string) { 
+        console.log(studentId)
         const {data} = await instance.post(`courses/${courseId}/marks/${studentId}`, markInfo)
         if (data){
             return data

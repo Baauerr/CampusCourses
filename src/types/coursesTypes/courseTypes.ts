@@ -91,6 +91,6 @@ export enum MarkType {
 }
 
 export interface IRequestSetMarkData {
-    markType: MarkType,
-    mark: IResultsStatusesData
+    markType?: MarkType,
+    mark?: IResultsStatusesData
 }

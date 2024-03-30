@@ -5,10 +5,12 @@ import statusTranslator from '../../helpers/coursesHelper/statusHelper';
 import { Typography, Card, Button, Grid } from '@mui/material';
 import { ICourseRoleData, ICourseStatusesData, IResponseCourseInfoData, typesOfModal } from '../../types/coursesTypes/courseTypes';
 import CreateCourseModal from '../groups/concretteGroup/createCourseModal';
-import { SetStateAction, useState } from 'react';
+import { useState } from 'react';
 import DeleteModal from '../groups/coursesGroups/deleteModal';
 import { CourseService } from './CourseService';
 import ChangeStatusModal from './editStatusModal';
+
+
 export interface InfoPanelProps {
     courseInfo?: IResponseCourseInfoData;
     setUpdated: React.Dispatch<React.SetStateAction<boolean>>;
@@ -23,23 +25,22 @@ export const InfoPanel = ({ courseInfo, setUpdated, courseRole, courseId }: Info
         changeStatusModal: false,
         deleteCourseModal: false,
         enterToCourse: false,
-      });
-      console.log(courseRole)
+    });
 
-      const handleOpenModal = (modalId: string) => {
+    const handleOpenModal = (modalId: string) => {
         setModalStates({ ...modalStates, [modalId]: true });
-      };
-      
-      const handleCloseModal = (modalId: string) => {
-        setModalStates({ ...modalStates, [modalId]: false });
-      };
+    };
 
-      const handleSendRequest = (courseId?: string) => {
-        if (courseId){
+    const handleCloseModal = (modalId: string) => {
+        setModalStates({ ...modalStates, [modalId]: false });
+    };
+
+    const handleSendRequest = (courseId?: string) => {
+        if (courseId) {
             CourseService.signUpForCourse(courseId);
             setUpdated(true);
         }
-      };
+    };
 
 
     if (!courseInfo) {
@@ -53,6 +54,8 @@ export const InfoPanel = ({ courseInfo, setUpdated, courseRole, courseId }: Info
         );
     }
 
+    console.log(courseRole)
+
     return (
         <div>
             <Grid item container xs={12} md={12} sx={{ marginBottom: "10px" }} direction="row" alignItems="center" justifyContent="space-between">
@@ -60,8 +63,16 @@ export const InfoPanel = ({ courseInfo, setUpdated, courseRole, courseId }: Info
                     Основные данные курса
                 </Typography>
                 {courseRole?.isMainTeacher &&
-                    <Grid item container xs={12} md={6} justifyContent="flex-end">
-                        <Button variant="contained" color="warning" onClick={() => handleOpenModal("editCourseModal")}>
+                    <Grid item container
+                        xs={12}
+                        md={6}
+                        justifyContent={{ xs: 'flex-start', sm: 'flex-start', md: 'flex-end', lg: 'flex-end' }}
+                    >
+                        <Button
+                            variant="contained"
+                            color="warning"
+                            onClick={() => handleOpenModal("editCourseModal")}
+                        >
                             Редактировать
                         </Button>
                         <Button variant="contained" color="error" onClick={() => handleOpenModal("deleteCourseModal")} sx={{ marginLeft: '10px' }}>
@@ -75,7 +86,7 @@ export const InfoPanel = ({ courseInfo, setUpdated, courseRole, courseId }: Info
                         <Typography fontSize={20} fontWeight="bold" textAlign="left">Статус курса</Typography>
                         <Typography fontSize={15} fontWeight="bold" textAlign="left" color={statusColorHelper(courseInfo.status)}>{statusTranslator(courseInfo.status)}</Typography>
                     </Grid>
-                    {courseRole?.isMainTeacher && courseInfo.status !==ICourseStatusesData.Finished &&
+                    {courseRole?.isMainTeacher && courseInfo.status !== ICourseStatusesData.Finished &&
                         <Button variant="contained" color={"warning"} onClick={() => handleOpenModal("changeStatusModal")}>
                             Изменить
                         </Button>
@@ -117,9 +128,9 @@ export const InfoPanel = ({ courseInfo, setUpdated, courseRole, courseId }: Info
                     <Typography fontSize={15} textAlign="left">{courseInfo.studentsInQueueCount}</Typography>
                 </Grid>
             </Card>
-            <CreateCourseModal open={modalStates.editCourseModal} handleClose={() => handleCloseModal("editCourseModal")} setUpdated={setUpdated} typeOfModal={typesOfModal.editCourse} role={courseRole} currentCourseInfo={courseInfo} />
-            <DeleteModal name={courseInfo.name} openDelete={modalStates.deleteCourseModal} handleCloseDelete={() => handleCloseModal("deleteCourseModal")} setUpdated={setUpdated} deleteRequestFunction={() => CourseService.deleteCourse(courseInfo.id)} redirectPath= {`/groups/`} />
-            <ChangeStatusModal id={courseInfo.id} openEdit={modalStates.changeStatusModal} handleClose={() => handleCloseModal("changeStatusModal")} setUpdated={setUpdated} courseStatus={courseInfo.status}/>
+            {modalStates.editCourseModal && <CreateCourseModal open={modalStates.editCourseModal} handleClose={() => handleCloseModal("editCourseModal")} setUpdated={setUpdated} typeOfModal={typesOfModal.editCourse} role={courseRole} currentCourseInfo={courseInfo} />}
+            {modalStates.deleteCourseModal && <DeleteModal name={courseInfo.name} openDelete={modalStates.deleteCourseModal} handleCloseDelete={() => handleCloseModal("deleteCourseModal")} setUpdated={setUpdated} deleteRequestFunction={() => CourseService.deleteCourse(courseInfo.id)} redirectPath={`/groups/`} />}
+            {modalStates.changeStatusModal && <ChangeStatusModal id={courseInfo.id} openEdit={modalStates.changeStatusModal} handleClose={() => handleCloseModal("changeStatusModal")} setUpdated={setUpdated} courseStatus={courseInfo.status} />}
         </div>
     )
 }

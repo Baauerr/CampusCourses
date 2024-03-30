@@ -1,4 +1,4 @@
-import { Typography, Box, Card, Divider, Button } from '@mui/material';
+import { Typography, Box, Card, Divider, Button, Chip, useMediaQuery } from '@mui/material';
 import { Dispatch, useState } from 'react';
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
@@ -38,6 +38,8 @@ export const CourseInfoTabs = ({ courseInfo, setUpdated, courseRole }: CourseInf
     const handleOpen = () => setOpen(true);
     const handleClose = () => setOpen(false);
 
+    const isSmallScreen = useMediaQuery('(max-width:1200px)');
+
     const [value, setValue] = useState('one');
 
     if (!courseInfo) {
@@ -52,7 +54,7 @@ export const CourseInfoTabs = ({ courseInfo, setUpdated, courseRole }: CourseInf
     }
 
 
-    
+
 
     const handleChange = (event: React.SyntheticEvent, newValue: string) => {
         setValue(newValue);
@@ -63,7 +65,7 @@ export const CourseInfoTabs = ({ courseInfo, setUpdated, courseRole }: CourseInf
             <Tabs
                 value={value}
                 onChange={handleChange}
-                variant="fullWidth"
+                variant={ isSmallScreen ? "scrollable" : "fullWidth"}
                 aria-label="wrapped label tabs example"
             >
                 <Tab
@@ -72,7 +74,28 @@ export const CourseInfoTabs = ({ courseInfo, setUpdated, courseRole }: CourseInf
                     wrapped
                 />
                 <Tab value="two" label="Аннотация" />
-                <Tab value="three" label="Уведомления" />
+                <Tab
+                    label={
+                        <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                            <span>Уведомления</span>
+                            {courseInfo.notifications.length >= 0 && (
+                                <Chip
+                                    label={courseInfo.notifications.length.toString() + '+'}
+                                    color="error"
+                                    size="small"
+                                    style={{
+                                        marginLeft: 10,
+                                        marginRight: 5,
+                                        alignItems: 'center', 
+                                        height: '24px',
+                                        lineHeight: '24px'
+                                    }}
+                                />
+                            )}
+                        </Box>
+                    }
+                    value="three"
+                />
             </Tabs>
             <Divider orientation="horizontal" />
             <TabPanel value={value} htmlString={courseInfo?.requirements} index="one">
@@ -103,7 +126,7 @@ export const CourseInfoTabs = ({ courseInfo, setUpdated, courseRole }: CourseInf
                     </Box>
                 )}
             </div>
-            <CreateNotification open={open} handleClose={handleClose} setUpdated={setUpdated} />
+            {open && <CreateNotification open={open} handleClose={handleClose} setUpdated={setUpdated} />}
         </div>
     )
 }
@@ -111,3 +134,6 @@ export const CourseInfoTabs = ({ courseInfo, setUpdated, courseRole }: CourseInf
 const chooseColor = (isImportant: boolean) => {
     return isImportant ? '#F8D7DA' : 'white';
 };
+
+
+

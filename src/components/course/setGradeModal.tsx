@@ -1,5 +1,5 @@
 import { Typography, Card, Button } from '@mui/material';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import IconButton from '@mui/material/IconButton';
 import CloseIcon from '@mui/icons-material/Close';
 import Modal from '@mui/material/Modal';
@@ -17,15 +17,18 @@ type setMarkModalProps = {
     open: boolean;
     handleClose: () => void;
     setUpdated: React.Dispatch<React.SetStateAction<boolean>>;
-    oldGrade: IResultsStatusesData
-    markType: MarkType
+    oldGrade?: IResultsStatusesData
+    markType?: MarkType
 };
 
 export const SetGradeModal = ({ open, handleClose, setUpdated, courseId, studentId, oldGrade, markType }: setMarkModalProps) => {
 
-    const [newMark, setGrade] = useState<IResultsStatusesData>(oldGrade);
+    console.log(oldGrade)
 
-    const handleClick = async (markType: MarkType) => {
+    const initialGrade: IResultsStatusesData = oldGrade || IResultsStatusesData.NotDefined;
+    const [newMark, setGrade] = useState<IResultsStatusesData>(initialGrade);
+
+    const handleClick = async (markType?: MarkType) => {
 
         const mark: IRequestSetMarkData = {
             markType: markType,
@@ -34,6 +37,7 @@ export const SetGradeModal = ({ open, handleClose, setUpdated, courseId, student
 
         try {
             await CourseService.setUserMark(mark, courseId, studentId);
+            
             setUpdated(true);
             handleClose();
         } catch (error) {
@@ -42,7 +46,7 @@ export const SetGradeModal = ({ open, handleClose, setUpdated, courseId, student
     };
 
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setGrade(event.target.value as IResultsStatusesData); 
+        setGrade(event.target.value as IResultsStatusesData);
     };
 
     return (<Modal
@@ -83,12 +87,14 @@ export const SetGradeModal = ({ open, handleClose, setUpdated, courseId, student
     );
 };
 
-const markTypeTranslator = (markType: MarkType): string => {
-    switch(markType){
+const markTypeTranslator = (markType?: MarkType): string => {
+    switch (markType) {
         case MarkType.Midterm:
             return "Промежуточная аттестация"
         case MarkType.Final:
             return "Финальная аттестация"
+        default:
+            return ""
     }
 }
 

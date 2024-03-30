@@ -1,6 +1,7 @@
 import ReactDOM from "react-dom/client";
 import {
   createBrowserRouter,
+  Navigate,
   RouterProvider,
 } from "react-router-dom";
 import App from "./App/App.tsx";
@@ -12,6 +13,8 @@ import Profile from "./components/auth/profile/profile.tsx";
 import { CoursesGroup } from "./components/groups/coursesGroups/coursesGroup.tsx";
 import { ConcretteGroup } from "./components/groups/concretteGroup/concretteGroup.tsx";
 import { Course } from "./components/course/course.tsx";
+import { getTokenFromLocalStorage } from "./helpers/tokenHelper.ts";
+import { TypeOfCourses } from "./types/groupsTypes/groupCourses.ts";
 
 export const router = createBrowserRouter([
   {
@@ -36,7 +39,15 @@ export const router = createBrowserRouter([
       },
       {
         path: "/groups/:id",
-        element: <ConcretteGroup />,
+        element: <ConcretteGroup typeOfCourses={TypeOfCourses.All} />,
+      },
+      {
+        path: "/courses/my/",
+        element: <ConcretteGroup typeOfCourses={TypeOfCourses.My} />,
+      },
+      {
+        path: "/courses/teaching/",
+        element: <ConcretteGroup typeOfCourses={TypeOfCourses.Teaching}  />,
       },
       {
         path: "/courses/:id",
@@ -47,7 +58,7 @@ export const router = createBrowserRouter([
 ]);
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
-  <Provider store = {store}>
+  <Provider store={store}>
     <RouterProvider router={router} />
   </Provider>
 

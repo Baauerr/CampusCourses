@@ -29,3 +29,10 @@ export interface IRequestCreateCourseData {
     requirements: string,
 }
 
+export enum TypeOfCourses {
+    "Teaching" = "Teaching",
+    "My" = "My",
+    "All" = "All"
+}
+
+

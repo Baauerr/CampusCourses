@@ -16,7 +16,7 @@ const App = () => {
   return (
     <Fragment>
       <Header />
-      <div style={{padding:  "80px"}}>
+      <div style={{paddingTop:  "80px"}}>
         <Outlet />
       </div>
     </Fragment>

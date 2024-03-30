@@ -73,7 +73,7 @@ export const UsersInfoTabs = ({ studentsArray, teachersArray, setUpdated, roles,
                 courseId={courseId}
             />
 
-            <CreateNotification open={open} handleClose={handleClose} setUpdated={setUpdated} />
+            {open && <CreateNotification open={open} handleClose={handleClose} setUpdated={setUpdated} />}
         </div>
     )
 }
