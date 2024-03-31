@@ -30,13 +30,11 @@ export const CoursesGroup = () => {
     const [open, setOpen] = useState(false);
     const [updated, setUpdated] = useState(true)
 
-
     const roles = useSelector((state: RootState) => state.user.roles);
     const isAuth = useAuth();
 
     const handleOpen = () => setOpen(true);
     const handleClose = () => setOpen(false);
-
 
     useEffect(() => {
         if (updated) {
@@ -56,12 +54,11 @@ export const CoursesGroup = () => {
     if (isAuth) {
         return (
             <Container maxWidth="lg">
-
-                <Grid item xs={12} md={12}>
-                    <Typography variant="h4" fontWeight="bold" fontFamily={'Roboto, sans-serif'} sx={{ marginBottom: "10px" }}>Группы кампусных курсов</Typography>
-                    {roles?.isAdmin && <Button variant="contained" sx={{ marginBottom: "10px" }} onClick={handleOpen}>
-                        Создать
-                    </Button>}
+                <Typography variant="h4" fontWeight="bold" fontFamily={'Roboto, sans-serif'} sx={{ marginBottom: "10px" }}>Группы кампусных курсов</Typography>
+                {roles?.isAdmin && <Button variant="contained" sx={{ marginBottom: "10px" }} onClick={handleOpen}>
+                    Создать
+                </Button>}
+                <Grid item xs={12} md={12} container justifyContent="center">
                     {groups?.map((item) =>
                     (
 

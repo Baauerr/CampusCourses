@@ -82,31 +82,38 @@ export const ConcretteGroup = ({ typeOfCourses }: ConcretteGroupProps) => {
     }, [updated]);
 
     return (
-        <Container maxWidth="lg">
-            <Grid item xs={12} md={12}>
-                { typeOfCourses === TypeOfCourses.All && <Typography variant="h4" fontWeight="bold" fontFamily={'Roboto, sans-serif'} sx={{ marginBottom: "5px" }}>
-                    Группа - {groupName}
-                </Typography>}
-                { typeOfCourses === TypeOfCourses.Teaching && <Typography variant="h4" fontWeight="bold" fontFamily={'Roboto, sans-serif'} sx={{ marginBottom: "5px" }}>
-                    Преподаваемые курсы
-                </Typography>}
-                { typeOfCourses === TypeOfCourses.My && <Typography variant="h4" fontWeight="bold" fontFamily={'Roboto, sans-serif'} sx={{ marginBottom: "5px" }}>
-                    Мои курсы
-                </Typography>}
-                {(roles?.isAdmin && typeOfCourses === TypeOfCourses.All) && <Button variant="contained" sx={{ marginBottom: "10px" }} onClick={handleOpen}>
-                    Создать
-                </Button>}
+        <Container maxWidth="lg" >
+            {typeOfCourses === TypeOfCourses.All && <Typography variant="h4" fontWeight="bold" fontFamily={'Roboto, sans-serif'} sx={{ marginBottom: "5px" }}>
+                Группа - {groupName}
+            </Typography>}
+            {typeOfCourses === TypeOfCourses.Teaching && <Typography variant="h4" fontWeight="bold" fontFamily={'Roboto, sans-serif'} sx={{ marginBottom: "5px" }}>
+                Преподаваемые курсы
+            </Typography>}
+            {typeOfCourses === TypeOfCourses.My && <Typography variant="h4" fontWeight="bold" fontFamily={'Roboto, sans-serif'} sx={{ marginBottom: "5px" }}>
+                Мои курсы
+            </Typography>}
+            {(roles?.isAdmin && typeOfCourses === TypeOfCourses.All) && <Button variant="contained" sx={{ marginBottom: "10px" }} onClick={handleOpen}>
+                Создать
+            </Button>}
+            <Grid item xs={12} md={12} container justifyContent="center">
                 {groups?.map((item) =>
                 (
-                    <MuiLink
-                        component={RouterLink}
-                        to={`/courses/${item.id}`}
-                        underline="none"
-                        key={item.id}
-                        color={'black'}
-                    >
-                        <Card variant="outlined" sx={{ ...cardHoverStyles }} key={item.id}>
-                            <Grid container item xs={12} md={12} justifyContent="space-between">
+
+                    <Card variant="outlined" sx={{ ...cardHoverStyles }} key={item.id} >
+                        <MuiLink
+                            component={RouterLink}
+                            to={`/courses/${item.id}`}
+                            underline="none"
+                            key={item.id}
+                            color={'black'}
+                        >
+                            <Grid
+                                container
+                                item xs={12}
+                                md={12}
+                                justifyContent="space-between"
+                                alignItems={{ xs: 'centerHorizontally', sm: 'center', md: 'center', lg: 'center' }}
+                            >
                                 <Typography fontSize={20} fontWeight="bold" textAlign="left" alignSelf="flex-start">{item.name}</Typography>
                                 <Typography fontSize={15} fontWeight="bold" textAlign="right" color={statusColorHelper(item.status)} alignSelf="flex-end">{statusTranslator(item.status)}</Typography>
                             </Grid>
@@ -114,8 +121,9 @@ export const ConcretteGroup = ({ typeOfCourses }: ConcretteGroupProps) => {
                             <Typography fontSize={13} sx={{ marginBottom: "10px" }}>Семестр - {seasonTranslator(item.semester)}</Typography>
                             <Typography fontSize={13} color="text.secondary">Мест всего - {item.maximumStudentsCount}</Typography>
                             <Typography fontSize={13} color="text.secondary">Мест свободно - {item.remainingSlotsCount}</Typography>
-                        </Card>
-                    </MuiLink>
+                        </MuiLink>
+                    </Card>
+
                 ))}
             </Grid>
             <CreateCourseModal setUpdated={setUpdated} open={open} handleClose={handleClose} typeOfModal={typesOfModal.createCourse} />
@@ -131,3 +139,4 @@ const getGroupName = async (id?: string): Promise<string | undefined> => {
 
     return neededGroup?.name
 }
+
