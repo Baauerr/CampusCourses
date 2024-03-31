@@ -11,7 +11,6 @@ import { profileValidationSchema } from '../../../helpers/validations/profileVal
 export const Profile = () => {
 
     useEffect(() => {
-
         const fetchData = async () => {
             try {
                 const info = await AuthService.getUserInfo();
@@ -41,7 +40,6 @@ export const Profile = () => {
                     birthDate: values.birthDate,
                     fullName: values.fullName,
                 }
-
                 await AuthService.editUserAccount(userData);
             }
             catch {

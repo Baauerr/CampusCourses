@@ -50,7 +50,7 @@ export const Registration = () => {
                         dispatch(roles(userRoles));
                     }
 
-                    navigate("/");
+                    navigate("/groups/");
                 }
             } catch (error: any) {
                 if (error.response && error.response.data.message === "User with this email is already registered.") {

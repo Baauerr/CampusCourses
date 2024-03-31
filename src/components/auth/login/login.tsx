@@ -31,7 +31,6 @@ export const Login = () => {
             try {
                 const loginResponse = await AuthService.login(values);
 
-
                 if (loginResponse) {
                     setServerError('');
                     setTokenToLocalStorage(loginResponse.token)
@@ -43,7 +42,7 @@ export const Login = () => {
                         dispatch(roles(userRoles));
                     }
 
-                    navigate("/");
+                    navigate("/groups/");
                 }
             } catch (error: any) {
                 if (error.response && error.response.status === 400) {

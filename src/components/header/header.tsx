@@ -1,5 +1,5 @@
 import AppBar from '@mui/material/AppBar';
-import { createTheme, ThemeProvider } from '@mui/material/styles';
+import { createTheme, ThemeProvider, Grid, Box, Drawer, useMediaQuery } from '@mui/material';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
@@ -10,6 +10,9 @@ import { useAppDispatch } from '../../store/hooks';
 import { logout } from '../../store/user/userSlice';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../store/store';
+import { CSSProperties, useEffect, useState } from 'react';
+import IconButton from '@mui/material/IconButton';
+import MenuIcon from '@mui/icons-material/Menu';
 
 const theme = createTheme({
   typography: {
@@ -30,93 +33,211 @@ const theme = createTheme({
   },
 });
 
-
 const Head = () => {
+
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+
+  const toggleDrawer = (open: boolean) => (event: React.KeyboardEvent | React.MouseEvent) => {
+    if (
+      event.type === 'keydown' &&
+      ((event as React.KeyboardEvent).key === 'Tab' || (event as React.KeyboardEvent).key === 'Shift')
+    ) {
+      return;
+    }
+
+    setIsDrawerOpen(open);
+  };
 
   return (
     <ThemeProvider theme={theme}>
       <AppBar sx={{ backgroundColor: '#002C54' }}>
         <Toolbar sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
           <Typography variant="h5" component="div" sx={{ display: 'flex', alignItems: 'stretch', gap: '10px' }}>
-              Кампусные курсы
-            <UserRolePanel />
+            Кампусные курсы
+            <Grid sx={{ display: { lg: 'block', xs: 'none', md: 'none' } }}>
+              <UserRolePanel />
+            </Grid>
           </Typography>
-          <UserPanel />
+          <Box sx={{ display: { sm: 'block', lg: 'none' } }}>
+            <IconButton
+              size="large"
+              edge="end"
+              color="inherit"
+              aria-label="menu"
+              onClick={toggleDrawer(true)}
+            >
+              <MenuIcon />
+            </IconButton>
+          </Box>
+          <Grid sx={{ display: { lg: 'block', xs: 'none', md: 'none' } }}>
+            <UserPanel />
+          </Grid>
         </Toolbar>
       </AppBar>
-    </ThemeProvider>
+      <Drawer
+        anchor="right"
+        open={isDrawerOpen}
+        onClose={toggleDrawer(false)}
+      >
+        <Box
+          sx={{ width: 250 }}
+          role="presentation"
+          onClick={toggleDrawer(false)}
+          onKeyDown={toggleDrawer(false)}
+        >
+          <Grid sx={{ marginBottom: "30px" }}>
+            <UserRolePanel />
+          </Grid>
+          <UserPanel />
+        </Box>
+      </Drawer>
+    </ThemeProvider >
   );
 }
 
 
-export const UserPanel = () => {
+interface StyleProps {
+  style?: CSSProperties;
+}
 
-  const dispatch = useAppDispatch()
+export const UserPanel = ({ style }: StyleProps) => {
 
+  const isMdScreen = useMediaQuery('(max-width:1200px)');
+
+  const isAuth = useAuth();
+  const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
-  const handleClick = async (e: React.FormEvent<HTMLButtonElement>) => {
+  useEffect(() => {
+    const fetchData = async () => {
+      const userInfo = await AuthService.getProfileInfo();
+      if (userInfo) {
+        localStorage.setItem("email", userInfo.email)
+      }
+    };
+    if (isAuth) {
+      fetchData();
+    }
+  }, [isAuth]);
 
+  const handleClick = async (e: React.FormEvent<HTMLButtonElement>) => {
     e.preventDefault();
     e.stopPropagation();
 
     try {
-      await AuthService.logout()
+      await AuthService.logout();
       dispatch(logout());
-      navigate("/")
-    }
-    catch {
+      navigate("/");
+    } catch {
       console.log("bruh");
     }
-  }
+  };
 
-  const isAuth = useAuth();
   if (!isAuth) {
     return (
-      <div>
+      <Grid
+        sx={{
+          flexDirection: { xs: 'column', md: 'column', lg:'row' },
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+        }}
+      >
         <Link to="/registration">
-          <Button variant="text" sx={{ color: 'white' }}>Регистрация</Button>
+          <Button
+            variant="text"
+            sx={{
+              color: isMdScreen ? 'black' : 'white',
+              marginRight: { xs: 0, md: 2, lg: 0 }
+            }}
+          >
+            Регистрация
+          </Button>
         </Link>
-        <Link to="/login">
-          <Button variant="text" sx={{ color: 'white' }}>Вход</Button>
+        <Link to="/login" >
+          <Button
+            variant="text"
+            sx={{
+              color: isMdScreen ? 'black' : 'white',
+              marginRight: { xs: 0, md: 2, lg: 0 }
+            }}
+          >
+            Вход
+          </Button>
         </Link>
-      </div>
-    )
-  }
-  else {
+      </Grid>
+    );
+  } else {
     return (
-      <div>
+      <Grid sx={style}>
         <Link to="/profile">
-          <Button variant="text" sx={{ color: 'white' }}>Профиль</Button>
+          <Button
+            variant="text"
+            sx={{
+              color: isMdScreen ? 'black' : 'white',
+            }}
+          >
+            {localStorage.getItem("email")}
+          </Button>
         </Link>
-        <Button variant="text" sx={{ color: 'white' }} onClick={handleClick}>Выйти</Button>
-      </div>
-    )
+        <Button
+          variant="text"
+          sx={{
+            color: isMdScreen ? 'black' : 'white',
+          }}
+          onClick={handleClick}
+        >
+          Выйти
+        </Button>
+      </Grid>
+    );
   }
-}
+};
+
 
 const UserRolePanel = () => {
-
   const roles = useSelector((state: RootState) => state.user.roles);
   const isAuth = useAuth();
-
-  console.log(roles?.isTeacher)
+  const isMdScreen = useMediaQuery('(max-width:1200px)');
 
   if (isAuth) {
     return (
-      <div>
-        <Link to="/groups">
-          <Button variant="text" sx={{ color: 'white' }}>Группы курсов</Button>
-        </Link>
-        {roles?.isStudent &&
-          <Link to="/courses/my">
-            <Button variant="text" sx={{ color: 'white' }}>Мои курсы</Button>
-          </Link>}
-        {roles?.isTeacher &&
-          <Link to="/courses/teaching">
-            <Button variant="text" sx={{ color: 'white' }}>Преподаваемые курсы</Button>
-          </Link>}
-      </div>
+      <Grid container sx={{ flexDirection: { xs: 'column', sm: 'column', lg: 'row' } }}>
+        <Box>
+          <Link to="/groups/">
+            <Button
+              variant="text"
+              sx={{
+                color: isMdScreen ? 'black' : 'white',
+              }}
+            >Группы курсов</Button>
+          </Link>
+        </Box>
+        <Box >
+          {roles?.isStudent && (
+            <Link to="/courses/my/">
+              <Button
+                variant="text"
+                sx={{
+                  color: isMdScreen ? 'black' : 'white',
+                }}
+              >Мои курсы</Button>
+            </Link>
+          )}
+        </Box>
+        <Box sx={{ display: { xs: 'block', sm: 'block', lg: 'initial' } }}>
+          {roles?.isTeacher && (
+            <Link to="/courses/teaching/">
+              <Button
+                variant="text"
+                sx={{
+                  color: isMdScreen ? 'black' : 'white',
+                }}
+              >Преподаваемые курсы</Button>
+            </Link>
+          )}
+        </Box>
+      </Grid>
     )
   }
 }
