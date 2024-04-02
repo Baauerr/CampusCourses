@@ -6,7 +6,6 @@ import { useParams } from 'react-router-dom';
 import { InfoPanel } from './infoPanel';
 import { CourseInfoTabs } from './courseInfoTabs';
 import { getUserCourseRole } from '../../helpers/coursesHelper/courseRoleHelper';
-import { useDispatch, useSelector } from 'react-redux';
 import { UsersInfoTabs } from './userTab';
 import { AuthService } from '../auth/authService';
 
@@ -18,8 +17,6 @@ export const Course = () => {
     const [updated, setUpdated] = useState(true)
     const [courseRoles, setCourseRole] = useState<ICourseRoleData>();
 
-    const dispatch = useDispatch();
-
     useEffect(() => {
         const fetchData = async () => {
             try {
@@ -28,8 +25,8 @@ export const Course = () => {
                 if (info && roles) {
                     setCourseInfo(info);
                     if (roles !== null) {
-                        const courseRoles = getUserCourseRole(info.students, info.teachers, roles);
                         if (id) {
+                            const courseRoles = await getUserCourseRole(info.students, info.teachers, roles, id);
                             setCourseRole(courseRoles)
                         }
                     }

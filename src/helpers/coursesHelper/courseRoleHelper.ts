@@ -1,8 +1,14 @@
+import { GroupsService } from "../../components/groups/groupsService";
 import { IAcceptanceStatusesData, ICourseRoleData, ICourseStudentsData, ICourseTeachersData } from "../../types/coursesTypes/courseTypes";
 import { IUserRolesData } from "../../types/userTypes/roleTypes";
 
-export const getUserCourseRole = (studentsArray: ICourseStudentsData[], teachersArray: ICourseTeachersData[], roles: IUserRolesData): ICourseRoleData => {
+export const getUserCourseRole = async (studentsArray: ICourseStudentsData[], teachersArray: ICourseTeachersData[], roles: IUserRolesData, courseId: string): Promise<ICourseRoleData> => {
     const userEmail = localStorage.getItem("email")
+
+    const myCourses = await GroupsService.getMyCourses();
+
+    console.log(courseId)
+
 
     const userRoles: ICourseRoleData = {
         isAdmin: false,
@@ -21,8 +27,6 @@ export const getUserCourseRole = (studentsArray: ICourseStudentsData[], teachers
     }
 
     const isTeacher = teachersArray.some(teacher => teacher.email === userEmail);
-    console.log(teachersArray)
-    console.log(userEmail)
     if (isTeacher) {
         userRoles.isTeacher = true;
         const isMainTeacher = teachersArray.some(teacher => teacher.email === userEmail && teacher.isMain);
@@ -37,8 +41,10 @@ export const getUserCourseRole = (studentsArray: ICourseStudentsData[], teachers
         userRoles.isStudent = true;
         return userRoles;
     }
-
-    const isPotentialStudent = studentsArray.some(student => student.email === userEmail && (student.status === IAcceptanceStatusesData.Declined || student.status === IAcceptanceStatusesData.InQueue));
+    const isPotentialStudent = ((!studentsArray.some(student => student.email === userEmail)) && (myCourses?.some(course => course.id === courseId)));
+    console.log(!studentsArray.some(student => student.email === userEmail));
+    console.log(myCourses?.some(course => course.id === courseId))
+    console.log(isPotentialStudent)
     if (isPotentialStudent) {
         userRoles.isPotentialStudent = true;
         return userRoles;

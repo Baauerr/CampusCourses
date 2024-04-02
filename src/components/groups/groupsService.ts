@@ -49,6 +49,7 @@ export const GroupsService = {
     },
 
     async createCourse(createData: IRequestCreateCourseData, id?: string) {
+        console.log(createData)
         const { data } = await instance.post(`groups/${id}`, createData)
         if (data) {
             return data

@@ -4,8 +4,7 @@ import TextField from '@mui/material/TextField';
 import Radio from '@mui/material/Radio';
 import RadioGroup from '@mui/material/RadioGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
-import MenuItem from '@mui/material/MenuItem';
-import Select from '@mui/material/Select';
+import Select from 'react-select';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import { IResponseUsersData } from '../../../types/userTypes/userGettingTypes';
@@ -183,16 +182,14 @@ const InputMainTeacher = ({ formik, users, typeOfModal }: SelectTeacherProps) =>
         <div>
             <InputLabel htmlFor="mainTeacherId" sx={{ marginTop: 1 }}>Основной преподаватель курса (обязательно)</InputLabel>
             <Select
-                variant="outlined"
+                options={users?.map((item) => ({ value: item.id, label: item.fullName }))}
+             //   variant="outlined"
                 id="mainTeacherId"
-                fullWidth
-                disabled={typeOfModal === typesOfModal.editCourse ? true : false}
-                {...formik.getFieldProps("mainTeacherId")}
-                error={formik.touched.mainTeacherId && Boolean(formik.errors.mainTeacherId)}
+              //  fullWidth
+                isDisabled={typeOfModal === typesOfModal.editCourse ? true : false}
+                onChange={(selectedOption) => formik.setFieldValue("mainTeacherId", selectedOption?.value)}
+               // error={formik.touched.mainTeacherId && Boolean(formik.errors.mainTeacherId)}
             >
-                {users?.map((item) =>
-                    <MenuItem key={item.id} value={item.id}>{item.fullName}</MenuItem>
-                )}
             </Select>
         </div>
     );
