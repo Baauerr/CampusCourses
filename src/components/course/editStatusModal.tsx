@@ -10,14 +10,7 @@ import RadioGroup from '@mui/material/RadioGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import 'react-quill/dist/quill.snow.css';
 import { ICourseStatusesData, IRequestChangeCourseStatusData } from '../../types/coursesTypes/courseTypes';
-
-type EditModalProps = {
-    id: string
-    openEdit: boolean;
-    handleClose: () => void;
-    setUpdated: React.Dispatch<React.SetStateAction<boolean>>;
-    courseStatus: ICourseStatusesData
-};
+import { EditModalProps } from '../../types/propsTypes/corsePropsTypes';
 
 export const ChangeStatusModal = ({ openEdit, handleClose, setUpdated, id, courseStatus }: EditModalProps) => {
 

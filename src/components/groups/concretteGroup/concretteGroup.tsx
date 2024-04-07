@@ -14,26 +14,19 @@ import seasonTranslator from '../../../helpers/coursesHelper/semesterHelper';
 import statusTranslator from '../../../helpers/coursesHelper/statusHelper';
 import { typesOfModal } from '../../../types/coursesTypes/courseTypes';
 
-
-
-type ConcretteGroupProps = {
-    typeOfCourses: TypeOfCourses;
-};
-
-export const ConcretteGroup = ({ typeOfCourses }: ConcretteGroupProps) => {
+export const ConcretteGroup = ( typeOfCourses : TypeOfCourses) => {
 
     const [groups, setGroupsInfo] = useState<IRequestCoursesData[]>();
     const [open, setOpen] = useState(false);
     const [updated, setUpdated] = useState(true)
     const [typeOfCourse, setTypeOfCourse] = useState<TypeOfCourses>();
     const [groupName, setGroupName] = useState<string>();
-
-    const handleOpen = () => setOpen(true);
-    const handleClose = () => setOpen(false);
-
     const { id } = useParams();
     const location = useLocation();
     const roles = useSelector((state: RootState) => state.user.roles);
+
+    const handleOpen = () => setOpen(true);
+    const handleClose = () => setOpen(false);
 
     const fetchData = async () => {
         try {
@@ -55,7 +48,7 @@ export const ConcretteGroup = ({ typeOfCourses }: ConcretteGroupProps) => {
                 setGroupsInfo(groupsInfo)
             }
             else {
-                throw Error("bruh")
+                throw Error("Проблема в получении данных")
             }
         } catch (error) {
             console.error(error);
@@ -71,7 +64,6 @@ export const ConcretteGroup = ({ typeOfCourses }: ConcretteGroupProps) => {
     }, [updated, location]);
 
     useEffect(() => {
-
         const setName = async () => {
             const groupName = await getGroupName(id)
             setGroupName(groupName)
@@ -79,7 +71,7 @@ export const ConcretteGroup = ({ typeOfCourses }: ConcretteGroupProps) => {
         if (updated) {
             setName()
         }
-    }, [updated]);
+    }, []);
 
     return (
         <Container maxWidth="lg" >

@@ -1,18 +1,10 @@
 import { Typography, Box, Card, Grid, Button } from '@mui/material';
-import { IAcceptanceStatusesData, ICourseRoleData, ICourseStudentsData, IRequestChangeUserStatusData, IResultsStatusesData, MarkType } from '../../types/coursesTypes/courseTypes';
+import { IAcceptanceStatusesData, ICourseStudentsData, IRequestChangeUserStatusData, IResultsStatusesData, MarkType } from '../../types/coursesTypes/courseTypes';
 import { acceptanceColor, acceptanceTranslator, markColor, markTranslator } from '../../helpers/coursesHelper/studentsHelper';
 import { CourseService } from './CourseService';
 import { useState } from 'react';
 import SetGradeModal from './setGradeModal';
-
-export interface StudentsPanelProps {
-    value: string;
-    index: string;
-    studentsList: ICourseStudentsData[];
-    role?: ICourseRoleData;
-    courseId?: string
-    setUpdated: React.Dispatch<React.SetStateAction<boolean>>;
-}
+import { StudentsPanelProps } from '../../types/propsTypes/corsePropsTypes';
 
 export interface MarkInfo {
     markValue: IResultsStatusesData
@@ -28,8 +20,6 @@ export const StudentsTab = ({ value, index, studentsList, role, courseId, setUpd
     const [markInfo, setMarkInfo] = useState<MarkInfo>();
     const handleOpen = () => setOpen(true);
     const handleClose = () => setOpen(false);
-
-    console.log(role)
 
     const handleChangeStatus = async (studentId: string, newStatus: IAcceptanceStatusesData, courseId?: string) => {
         const status: IRequestChangeUserStatusData = {

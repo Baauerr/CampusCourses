@@ -1,20 +1,11 @@
-import { Card, Divider } from '@mui/material';
-import { Dispatch, useState } from 'react';
+import { Card, Divider, Skeleton } from '@mui/material';
+import { SyntheticEvent, useState } from 'react';
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
-import { Skeleton } from '@mui/material';
-import { ICourseRoleData, ICourseStudentsData, ICourseTeachersData } from '../../types/coursesTypes/courseTypes';
 import { CreateNotification } from './createNotification';
 import { StudentsTab } from './studentsTab';
 import { TeachersTab } from './teachersTab';
-
-export interface CourseInfoTabsProps {
-    studentsArray: ICourseStudentsData[];
-    teachersArray: ICourseTeachersData[];
-    setUpdated: Dispatch<React.SetStateAction<boolean>>;
-    roles?: ICourseRoleData;
-    courseId?: string
-}
+import { CourseInfoTabsProps } from '../../types/propsTypes/corsePropsTypes';
 
 export const UsersInfoTabs = ({ studentsArray, teachersArray, setUpdated, roles, courseId }: CourseInfoTabsProps) => {
 
@@ -35,7 +26,7 @@ export const UsersInfoTabs = ({ studentsArray, teachersArray, setUpdated, roles,
         );
     }
 
-    const handleChange = (event: React.SyntheticEvent, newValue: string) => {
+    const handleChange = (event: SyntheticEvent, newValue: string) => {
         setValue(newValue);
     };
 
@@ -72,7 +63,6 @@ export const UsersInfoTabs = ({ studentsArray, teachersArray, setUpdated, roles,
                 studentsList={studentsArray}
                 courseId={courseId}
             />
-
             {open && <CreateNotification open={open} handleClose={handleClose} setUpdated={setUpdated} />}
         </div>
     )

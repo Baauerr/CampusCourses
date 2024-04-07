@@ -1,6 +1,5 @@
 import { Typography, Card, Button, Grid } from '@mui/material';
 import { useState } from 'react';
-
 import Modal from '@mui/material/Modal';
 import TextField from '@mui/material/TextField';
 import IconButton from '@mui/material/IconButton';
@@ -10,12 +9,7 @@ import { CourseService } from './CourseService';
 import { useParams } from 'react-router-dom';
 import Checkbox from '@mui/material/Checkbox';
 import FormControlLabel from '@mui/material/FormControlLabel';
-
-type CreateModalProps = {
-    open: boolean;
-    handleClose: () => void;
-    setUpdated: React.Dispatch<React.SetStateAction<boolean>>;
-};
+import { CreateModalProps } from '../../types/propsTypes/corsePropsTypes';
 
 export const CreateNotification = ({ open, handleClose, setUpdated }: CreateModalProps) => {
 

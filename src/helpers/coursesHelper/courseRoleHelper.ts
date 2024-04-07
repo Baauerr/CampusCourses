@@ -7,9 +7,6 @@ export const getUserCourseRole = async (studentsArray: ICourseStudentsData[], te
 
     const myCourses = await GroupsService.getMyCourses();
 
-    console.log(courseId)
-
-
     const userRoles: ICourseRoleData = {
         isAdmin: false,
         isMainTeacher: false,
@@ -41,10 +38,8 @@ export const getUserCourseRole = async (studentsArray: ICourseStudentsData[], te
         userRoles.isStudent = true;
         return userRoles;
     }
+    
     const isPotentialStudent = ((!studentsArray.some(student => student.email === userEmail)) && (myCourses?.some(course => course.id === courseId)));
-    console.log(!studentsArray.some(student => student.email === userEmail));
-    console.log(myCourses?.some(course => course.id === courseId))
-    console.log(isPotentialStudent)
     if (isPotentialStudent) {
         userRoles.isPotentialStudent = true;
         return userRoles;

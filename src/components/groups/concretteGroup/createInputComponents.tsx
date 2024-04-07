@@ -7,10 +7,8 @@ import FormControlLabel from '@mui/material/FormControlLabel';
 import Select from 'react-select';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
-import { IResponseUsersData } from '../../../types/userTypes/userGettingTypes';
-import { FormikProps } from 'formik';
-import { ICourseRoleData, typesOfModal } from '../../../types/coursesTypes/courseTypes';
-import { IRequestCreateCourseData } from '../../../types/groupsTypes/groupCourses';
+import { typesOfModal } from '../../../types/coursesTypes/courseTypes';
+import { CourseInputProps, InputProps, InputsNameProps, SelectTeacherProps } from '../../../types/propsTypes/inputsProps';
 
 const QuillField = ({ name, setFieldValue, value }: { name: string, setFieldValue: Function, value: string }) => {
     const handleChange = (content: string) => {
@@ -48,29 +46,6 @@ const QuillField = ({ name, setFieldValue, value }: { name: string, setFieldValu
         </div>
     );
 }
-
-type InputsNameProps = {
-    formik: FormikProps<IRequestCreateCourseData>;
-    serverError: string
-};
-
-type InputProps = {
-    formik: FormikProps<IRequestCreateCourseData>;
-};
-
-type SelectTeacherProps = {
-    formik: FormikProps<IRequestCreateCourseData>;
-    users?: IResponseUsersData[];
-    typeOfModal: typesOfModal;
-};
-
-type CourseInputProps = {
-    formik: FormikProps<IRequestCreateCourseData>;
-    typeOfModal: typesOfModal;
-    serverError: string;
-    users?: IResponseUsersData[]
-    role?: ICourseRoleData;
-};
 
 export const CourseInputs = ({ formik, typeOfModal, serverError, users, role }: CourseInputProps) => {
     return (
@@ -183,12 +158,9 @@ const InputMainTeacher = ({ formik, users, typeOfModal }: SelectTeacherProps) =>
             <InputLabel htmlFor="mainTeacherId" sx={{ marginTop: 1 }}>Основной преподаватель курса (обязательно)</InputLabel>
             <Select
                 options={users?.map((item) => ({ value: item.id, label: item.fullName }))}
-             //   variant="outlined"
                 id="mainTeacherId"
-              //  fullWidth
                 isDisabled={typeOfModal === typesOfModal.editCourse ? true : false}
                 onChange={(selectedOption) => formik.setFieldValue("mainTeacherId", selectedOption?.value)}
-               // error={formik.touched.mainTeacherId && Boolean(formik.errors.mainTeacherId)}
             >
             </Select>
         </div>

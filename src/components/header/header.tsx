@@ -137,7 +137,7 @@ export const UserPanel = ({ style }: StyleProps) => {
     return (
       <Grid
         sx={{
-          flexDirection: { xs: 'column', md: 'column', lg:'row' },
+          flexDirection: { xs: 'column', md: 'column', lg: 'row' },
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',

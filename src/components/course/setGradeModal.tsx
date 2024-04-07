@@ -10,20 +10,10 @@ import RadioGroup from '@mui/material/RadioGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import 'react-quill/dist/quill.snow.css';
 import { IRequestSetMarkData, IResultsStatusesData, MarkType } from '../../types/coursesTypes/courseTypes';
-
-type setMarkModalProps = {
-    courseId?: string
-    studentId?: string
-    open: boolean;
-    handleClose: () => void;
-    setUpdated: React.Dispatch<React.SetStateAction<boolean>>;
-    oldGrade?: IResultsStatusesData
-    markType?: MarkType
-};
+import { markTypeTranslator } from '../../helpers/coursesHelper/marksHelper';
+import { setMarkModalProps } from '../../types/propsTypes/corsePropsTypes';
 
 export const SetGradeModal = ({ open, handleClose, setUpdated, courseId, studentId, oldGrade, markType }: setMarkModalProps) => {
-
-    console.log(oldGrade)
 
     const initialGrade: IResultsStatusesData = oldGrade || IResultsStatusesData.NotDefined;
     const [newMark, setGrade] = useState<IResultsStatusesData>(initialGrade);
@@ -41,7 +31,7 @@ export const SetGradeModal = ({ open, handleClose, setUpdated, courseId, student
             setUpdated(true);
             handleClose();
         } catch (error) {
-            console.log("bruh");
+            console.log("Не удалось поставить оценку", error);
         }
     };
 
@@ -87,15 +77,5 @@ export const SetGradeModal = ({ open, handleClose, setUpdated, courseId, student
     );
 };
 
-const markTypeTranslator = (markType?: MarkType): string => {
-    switch (markType) {
-        case MarkType.Midterm:
-            return "Промежуточная аттестация"
-        case MarkType.Final:
-            return "Финальная аттестация"
-        default:
-            return ""
-    }
-}
 
 export default SetGradeModal

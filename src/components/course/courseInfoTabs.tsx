@@ -1,21 +1,18 @@
 import { Typography, Box, Card, Divider, Button, Chip, useMediaQuery } from '@mui/material';
-import { Dispatch, useState } from 'react';
+import { SyntheticEvent, useState } from 'react';
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 import { Skeleton } from '@mui/material';
-import { ICourseRoleData, IResponseCourseInfoData } from '../../types/coursesTypes/courseTypes';
 import { CreateNotification } from './createNotification';
+import { CourseInfoProps, TabPanelProps } from '../../types/propsTypes/corsePropsTypes';
 
-function TabPanel(props: any) {
-
-    const { children, value, index, htmlString, ...other } = props;
+function TabPanel({ value, index, htmlString }: TabPanelProps) {
     return (
         <div
             role="tabpanel"
             hidden={value !== index}
             id={`wrapped-tabpanel-${index}`}
             aria-labelledby={`wrapped-tab-${index}`}
-            {...other}
         >
             {value === index && (
                 <Box sx={{ p: 3 }}>
@@ -26,13 +23,7 @@ function TabPanel(props: any) {
     );
 }
 
-export interface CourseInfoTabsProps {
-    courseInfo?: IResponseCourseInfoData;
-    setUpdated: Dispatch<React.SetStateAction<boolean>>;
-    courseRole?: ICourseRoleData;
-}
-
-export const CourseInfoTabs = ({ courseInfo, setUpdated, courseRole }: CourseInfoTabsProps) => {
+export const CourseInfoTabs = ({ courseInfo, setUpdated, courseRole }: CourseInfoProps) => {
 
     const [open, setOpen] = useState(false);
     const handleOpen = () => setOpen(true);
@@ -53,10 +44,7 @@ export const CourseInfoTabs = ({ courseInfo, setUpdated, courseRole }: CourseInf
         );
     }
 
-
-
-
-    const handleChange = (event: React.SyntheticEvent, newValue: string) => {
+    const handleChange = (event: SyntheticEvent, newValue: string) => {
         setValue(newValue);
     };
 

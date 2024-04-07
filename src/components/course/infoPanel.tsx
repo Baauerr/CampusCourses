@@ -3,20 +3,13 @@ import { Skeleton } from '@mui/material';
 import statusColorHelper from '../../helpers/coursesHelper/statusColorHelper';
 import statusTranslator from '../../helpers/coursesHelper/statusHelper';
 import { Typography, Card, Button, Grid } from '@mui/material';
-import { ICourseRoleData, ICourseStatusesData, IResponseCourseInfoData, typesOfModal } from '../../types/coursesTypes/courseTypes';
+import { ICourseStatusesData, typesOfModal } from '../../types/coursesTypes/courseTypes';
 import CreateCourseModal from '../groups/concretteGroup/createCourseModal';
 import { useState } from 'react';
 import DeleteModal from '../groups/coursesGroups/deleteModal';
 import { CourseService } from './CourseService';
 import ChangeStatusModal from './editStatusModal';
-
-
-export interface InfoPanelProps {
-    courseInfo?: IResponseCourseInfoData;
-    setUpdated: React.Dispatch<React.SetStateAction<boolean>>;
-    courseRole?: ICourseRoleData
-    courseId?: string
-}
+import { InfoPanelProps } from '../../types/propsTypes/corsePropsTypes';
 
 export const InfoPanel = ({ courseInfo, setUpdated, courseRole, courseId }: InfoPanelProps) => {
 
@@ -41,7 +34,6 @@ export const InfoPanel = ({ courseInfo, setUpdated, courseRole, courseId }: Info
             setUpdated(true);
         }
     };
-
 
     if (!courseInfo) {
         return (

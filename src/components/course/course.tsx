@@ -40,7 +40,6 @@ export const Course = () => {
             fetchData();
             setUpdated(false);
         }
-
     }, [updated]);
 
     return (

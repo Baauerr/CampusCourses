@@ -13,35 +13,15 @@ import { IResponseUsersData } from '../../../types/userTypes/userGettingTypes';
 import { style } from '../../modalWindows/styles';
 import { CourseInputs } from './createInputComponents';
 import { CourseService } from '../../course/CourseService';
-import { ICourseRoleData, IResponseCourseInfoData, typesOfModal } from '../../../types/coursesTypes/courseTypes';
+import { typesOfModal } from '../../../types/coursesTypes/courseTypes';
 import { IRequestCreateCourseData } from '../../../types/groupsTypes/groupCourses';
 import { courseMapper } from '../../../helpers/coursesHelper/courseMapper';
+import { CreateCourseModalProps } from '../../../types/propsTypes/groupsPropsTypes';
 
-type CreateModalProps = {
-    open: boolean;
-    handleClose: () => void;
-    setUpdated: React.Dispatch<React.SetStateAction<boolean>>;
-    typeOfModal: typesOfModal
-    role?: ICourseRoleData
-    currentCourseInfo?: IResponseCourseInfoData
-};
-
-export const CreateCourseModal = ({ open, handleClose, setUpdated, typeOfModal, role, currentCourseInfo }: CreateModalProps) => {
+export const CreateCourseModal = ({ open, handleClose, setUpdated, typeOfModal, role, currentCourseInfo }: CreateCourseModalProps) => {
 
     const [serverError, setServerError] = useState<string>('');
     const [users, setUsers] = useState<IResponseUsersData[]>()
-
-    const [newCourseInfo, setCourseInfo] = useState<IRequestCreateCourseData>({
-        name: '',
-        startYear: 2024,
-        maximumStudentsCount: 1,
-        semester: "Autumn",
-        requirements: '',
-        annotations: '',
-        mainTeacherId: '',
-    });
-
-    const { id } = useParams();
 
     const initialValues: IRequestCreateCourseData = {
         name: '',
@@ -52,6 +32,10 @@ export const CreateCourseModal = ({ open, handleClose, setUpdated, typeOfModal, 
         annotations: '',
         mainTeacherId: '',
     };
+
+    const [newCourseInfo, setCourseInfo] = useState<IRequestCreateCourseData>(initialValues);
+
+    const { id } = useParams();
 
     const formik = useFormik({
         initialValues: initialValues,
@@ -74,31 +58,6 @@ export const CreateCourseModal = ({ open, handleClose, setUpdated, typeOfModal, 
         }, [newCourseInfo]);
     }
 
-
-    const submitValues = async (values: IRequestCreateCourseData, setSubmitting: { (isSubmitting: boolean): void; (arg0: boolean): void; }) => {
-        try {
-            if (typeOfModal === typesOfModal.createCourse) {
-                await GroupsService.createCourse(values, id);
-            }
-            else if (typeOfModal === typesOfModal.editCourse) {
-                await CourseService.changeCourseInfo(values, id);
-            }
-            console.log("jija")
-            setUpdated(true);
-            handleClose();
-        } catch (error: any) {
-            if (error.response) {
-                setServerError('Такое название уже занято');
-                formik.setFieldError('name', 'Такое название уже занято');
-            } else {
-                console.error(error);
-                setServerError('Произошла ошибка. Попробуйте еще раз.');
-            }
-        } finally {
-            setSubmitting(false);
-        }
-    }
-
     useEffect(() => {
         const fetchData = async () => {
             try {
@@ -116,6 +75,29 @@ export const CreateCourseModal = ({ open, handleClose, setUpdated, typeOfModal, 
 
         fetchData();
     }, []);
+
+    const submitValues = async (values: IRequestCreateCourseData, setSubmitting: { (isSubmitting: boolean): void; (arg0: boolean): void; }) => {
+        try {
+            if (typeOfModal === typesOfModal.createCourse) {
+                await GroupsService.createCourse(values, id);
+            }
+            else if (typeOfModal === typesOfModal.editCourse) {
+                await CourseService.changeCourseInfo(values, id);
+            }
+            setUpdated(true);
+            handleClose();
+        } catch (error: any) {
+            if (error.response) {
+                setServerError('Такое название уже занято');
+                formik.setFieldError('name', 'Такое название уже занято');
+            } else {
+                console.error(error);
+                setServerError('Произошла ошибка. Попробуйте еще раз.');
+            }
+        } finally {
+            setSubmitting(false);
+        }
+    }
 
     return (<Modal
         open={open}
