@@ -1,4 +1,4 @@
-import { Typography, Box, Card, Grid, Button, useMediaQuery, Hidden } from '@mui/material';
+import { Typography, Box, Card, Grid, Button, useMediaQuery } from '@mui/material';
 import { ICourseTeachersData } from '../../types/coursesTypes/courseTypes';
 import { useState } from 'react';
 import AddTeacherModal from './addTeacherModal';

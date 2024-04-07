@@ -15,13 +15,8 @@ import { HelloComponent } from "../App/HelloPage";
 
 export const router = createBrowserRouter([
     {
-        path: "/",
         element: <PrivateRoutes />,
         children: [
-            {
-                path: "/",
-                element: <HelloComponent />,
-            },
             {
                 path: "/profile",
                 element: <Profile />,
@@ -58,6 +53,10 @@ export const router = createBrowserRouter([
             {
                 path: "/login/",
                 element: <Login />,
+            },
+            {
+                path: "/",
+                element: <HelloComponent />,
             },
         ]
     },
