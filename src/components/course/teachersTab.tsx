@@ -1,4 +1,4 @@
-import { Typography, Box, Card, Grid, Button } from '@mui/material';
+import { Typography, Box, Card, Grid, Button, useMediaQuery, Hidden } from '@mui/material';
 import { ICourseTeachersData } from '../../types/coursesTypes/courseTypes';
 import { useState } from 'react';
 import AddTeacherModal from './addTeacherModal';
@@ -11,6 +11,7 @@ export const TeachersTab = ({ value, index, teachersList, role, studentsList, se
     const [open, setOpen] = useState(false);
     const handleOpen = () => setOpen(true);
     const handleClose = () => setOpen(false);
+    const isSmallScreen = useMediaQuery('(max-width:600px)');
 
     return (
         <div
@@ -30,12 +31,13 @@ export const TeachersTab = ({ value, index, teachersList, role, studentsList, se
                         <Box key={teacher.email}>
                             <Card variant="outlined" sx={{ padding: "10px" }}>
                                 <Grid container item xs={12} md={12} direction="row">
-                                    <Grid container item xs={6} md={6} direction="column">
+                                    <Grid container item xs={12} md={12} direction="column">
                                         <Typography fontSize={20} fontWeight="bold" textAlign="left">
-                                            {teacher.name} {teacher.isMain ?
-                                                <Chip sx={{ maxHeight: 0.8, borderRadius: 1 }} label="Основной" color="success" /> : ""}
+                                            {teacher.name}
+                                            {!isSmallScreen && teacher.isMain && <Chip sx={{ maxHeight: 0.8, borderRadius: 1, marginLeft: 1 }} label="Основной" color="success" />}
                                         </Typography>
-                                        <Typography fontSize={15} textAlign="left" >{teacher.email}</Typography>
+                                        <Typography fontSize={15} textAlign="left">{teacher.email}</Typography>
+                                        {isSmallScreen && teacher.isMain && <Chip sx={{ maxHeight: 0.8, borderRadius: 1 }} label="Основной" color="success" />}
                                     </Grid>
                                 </Grid>
                             </Card>
