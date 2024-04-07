@@ -1,11 +1,11 @@
 
 import { Typography, Card, Button } from '@mui/material';
 import { GroupsService } from '../groupsService';
-import { useEffect, useState } from 'react';
+import { Dispatch, SetStateAction, useEffect, useState } from 'react';
 import Modal from '@mui/material/Modal';
 import IconButton from '@mui/material/IconButton';
 import CloseIcon from '@mui/icons-material/Close';
-import { useFormik } from "formik";
+import { FormikProps, useFormik } from "formik";
 import 'react-quill/dist/quill.snow.css';
 import createCourseValidation from '../../../helpers/validations/createCourseValidation';
 import { useParams } from 'react-router-dom';
@@ -41,7 +41,9 @@ export const CreateCourseModal = ({ open, handleClose, setUpdated, typeOfModal, 
         initialValues: initialValues,
         validationSchema: createCourseValidation,
         onSubmit: async (values, { setSubmitting }) => {
-            submitValues(values, setSubmitting);
+            if (id) {
+                submitValues(values, setSubmitting, typeOfModal, id, setUpdated, handleClose, setServerError, formik);
+            }
         },
     });
 
@@ -59,45 +61,8 @@ export const CreateCourseModal = ({ open, handleClose, setUpdated, typeOfModal, 
     }
 
     useEffect(() => {
-        const fetchData = async () => {
-            try {
-                const usersInfo = await GroupsService.getUsers();
-                if (usersInfo !== undefined) {
-                    setUsers(usersInfo)
-                }
-                else {
-                    throw Error("bruh")
-                }
-            } catch (error) {
-                console.error(error);
-            }
-        };
-
-        fetchData();
+            fetchData(setUsers);
     }, []);
-
-    const submitValues = async (values: IRequestCreateCourseData, setSubmitting: { (isSubmitting: boolean): void; (arg0: boolean): void; }) => {
-        try {
-            if (typeOfModal === typesOfModal.createCourse) {
-                await GroupsService.createCourse(values, id);
-            }
-            else if (typeOfModal === typesOfModal.editCourse) {
-                await CourseService.changeCourseInfo(values, id);
-            }
-            setUpdated(true);
-            handleClose();
-        } catch (error: any) {
-            if (error.response) {
-                setServerError('Такое название уже занято');
-                formik.setFieldError('name', 'Такое название уже занято');
-            } else {
-                console.error(error);
-                setServerError('Произошла ошибка. Попробуйте еще раз.');
-            }
-        } finally {
-            setSubmitting(false);
-        }
-    }
 
     return (<Modal
         open={open}
@@ -138,5 +103,52 @@ export const CreateCourseModal = ({ open, handleClose, setUpdated, typeOfModal, 
     </Modal>
     );
 };
+
+async function submitValues (
+    values: IRequestCreateCourseData,
+    setSubmitting: { (isSubmitting: boolean): void; (arg0: boolean): void; },
+    typeOfModal: typesOfModal,
+    id: string,
+    setUpdated: Dispatch<SetStateAction<boolean>>,
+    handleClose: () => void,
+    setServerError: Dispatch<SetStateAction<string>>,
+    formik: FormikProps<IRequestCreateCourseData>
+) {
+    try {
+        if (typeOfModal === typesOfModal.createCourse) {
+            await GroupsService.createCourse(values, id);
+        }
+        else if (typeOfModal === typesOfModal.editCourse) {
+            await CourseService.changeCourseInfo(values, id);
+        }
+        setUpdated(true);
+        handleClose();
+    } catch (error: any) {
+        if (error.response) {
+            setServerError('Такое название уже занято');
+            formik.setFieldError('name', 'Такое название уже занято');
+        } else {
+            console.error(error);
+            setServerError('Произошла ошибка. Попробуйте еще раз.');
+        }
+    } finally {
+        setSubmitting(false);
+    }
+}
+
+async function fetchData (setUsers: Dispatch<SetStateAction<IResponseUsersData[] | undefined>>) {
+    try {
+        const usersInfo = await GroupsService.getUsers();
+        if (usersInfo !== undefined) {
+            setUsers(usersInfo)
+        }
+        else {
+            throw Error("Не удалось получить список пользователей")
+        }
+    } catch (error) {
+        console.error(error);
+    }
+};
+
 
 export default CreateCourseModal

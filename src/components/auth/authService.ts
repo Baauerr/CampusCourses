@@ -2,7 +2,6 @@ import { IResponseLoginData } from "../../types/userTypes/registrationTypes"
 import { IAuthRequestData } from "../../types/userTypes/registrationTypes"
 import { instance } from "../../api/axios"
 import { IResponseRegistrationData } from "../../types/userTypes/registrationTypes"
-import { removeTokenFromLocalStorage } from "../../helpers/tokenHelper"
 import { IUserRolesData } from "../../types/userTypes/roleTypes"
 import { IResponseAccountInfoData } from "../../types/userTypes/accountTypes"
 
@@ -57,7 +56,6 @@ export const AuthService = {
 
     async logout() {
         await instance.post('logout');
-        removeTokenFromLocalStorage();
-        localStorage.removeItem("email")
+        localStorage.clear()
     }
 }

@@ -72,4 +72,15 @@ export interface TabPanelProps {
     htmlString: string
 }
 
+export interface AddTeacherModalProps {
+    id?: string
+    openEdit: boolean;
+    handleClose: () => void;
+    setUpdated: React.Dispatch<React.SetStateAction<boolean>>;
+    teachersArray: ICourseTeachersData[];
+    studentsArray: ICourseStudentsData[];
+};
+
+
+
 

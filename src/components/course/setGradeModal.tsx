@@ -1,5 +1,5 @@
 import { Typography, Card, Button } from '@mui/material';
-import { useEffect, useState } from 'react';
+import { Dispatch, useEffect, useState } from 'react';
 import IconButton from '@mui/material/IconButton';
 import CloseIcon from '@mui/icons-material/Close';
 import Modal from '@mui/material/Modal';
@@ -19,20 +19,8 @@ export const SetGradeModal = ({ open, handleClose, setUpdated, courseId, student
     const [newMark, setGrade] = useState<IResultsStatusesData>(initialGrade);
 
     const handleClick = async (markType?: MarkType) => {
-
-        const mark: IRequestSetMarkData = {
-            markType: markType,
-            mark: newMark
-        };
-
-        try {
-            await CourseService.setUserMark(mark, courseId, studentId);
-            
-            setUpdated(true);
-            handleClose();
-        } catch (error) {
-            console.log("Не удалось поставить оценку", error);
-        }
+        if (markType && courseId && studentId)
+            await setGradeClick(markType, newMark, courseId, studentId, setUpdated, handleClose);
     };
 
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -77,5 +65,26 @@ export const SetGradeModal = ({ open, handleClose, setUpdated, courseId, student
     );
 };
 
+
+const setGradeClick = async (
+    markType: MarkType,
+    newMark: IResultsStatusesData,
+    courseId: string,
+    studentId: string,
+    setUpdated: Dispatch<React.SetStateAction<boolean>>,
+    handleClose: () => void
+) => {
+    const mark: IRequestSetMarkData = {
+        markType: markType,
+        mark: newMark
+    };
+    try {
+        await CourseService.setUserMark(mark, courseId, studentId);
+        setUpdated(true);
+        handleClose();
+    } catch (error) {
+        console.log("Не удалось поставить оценку", error);
+    }
+}
 
 export default SetGradeModal

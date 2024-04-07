@@ -1,5 +1,5 @@
 import { Typography, Card, Button } from '@mui/material';
-import { useEffect, useState } from 'react';
+import { Dispatch, SetStateAction, useEffect, useState } from 'react';
 import IconButton from '@mui/material/IconButton';
 import CloseIcon from '@mui/icons-material/Close';
 import Modal from '@mui/material/Modal';
@@ -12,55 +12,25 @@ import { InputLabel } from '@mui/material';
 import Select from 'react-select';
 import 'react-quill/dist/quill.snow.css';
 import { getPotentialTeachers } from '../../helpers/coursesHelper/potentialTeachersHelpers';
-
-type EditModalProps = {
-    id?: string
-    openEdit: boolean;
-    handleClose: () => void;
-    setUpdated: React.Dispatch<React.SetStateAction<boolean>>;
-    teachersArray: ICourseTeachersData[];
-    studentsArray: ICourseStudentsData[];
-};
+import { AddTeacherModalProps } from '../../types/propsTypes/corsePropsTypes';
 
 type Option = { value: string; label: string };
 
-export const AddTeacherModal = ({ openEdit, handleClose, setUpdated, id, teachersArray, studentsArray }: EditModalProps) => {
+export const AddTeacherModal = ({ openEdit, handleClose, setUpdated, id, teachersArray, studentsArray }: AddTeacherModalProps) => {
 
     const [potentialTeachers, setPotentialTeachers] = useState<Option[]>();
     const [selectedUser, setSelectedUser] = useState<string>('');
     const [loading, setLoading] = useState<boolean>(false);
 
     const handleClick = async () => {
-        try {
-            if (id) {
-                setLoading(true);
-                const newTeacher: IRequestAddNewTeacher = {
-                    userId: selectedUser
-                };
-                await CourseService.addTeacher(id, newTeacher);
-                setUpdated(true);
-                handleClose();
-            }
-        } catch (error) {
-            console.error("Ошибка при добавлении учителей:", error);
-        } finally {
-            setLoading(false);
+        if (id) {
+            await clickEvent(id, setLoading, selectedUser, setUpdated, handleClose);
         }
+
     };
 
     useEffect(() => {
-        const fetchData = async () => {
-            setLoading(true);
-            try {
-                const users: IResponseUsersData[] = await getPotentialTeachers(teachersArray, studentsArray);
-                setPotentialTeachers(users.map(user => ({ value: user.id, label: user.fullName })));
-            } catch (error) {
-                console.error("Ошибка при получении потенциальных учителей:", error);
-            } finally {
-                setLoading(false);
-            }
-        };
-        fetchData();
+        fetchPotentialUsers(setLoading, setPotentialTeachers, teachersArray, studentsArray);
     }, [teachersArray, studentsArray]);
 
     const handleSelectChange = (selectedOption: Option | null) => {
@@ -102,6 +72,47 @@ export const AddTeacherModal = ({ openEdit, handleClose, setUpdated, id, teacher
     </Modal>
     );
 };
+
+async function clickEvent(
+    id: string,
+    setLoading: Dispatch<SetStateAction<boolean>>,
+    selectedUser: string,
+    setUpdated: Dispatch<SetStateAction<boolean>>,
+    handleClose: () => void
+) {
+    try {
+        if (id) {
+            setLoading(true);
+            const newTeacher: IRequestAddNewTeacher = {
+                userId: selectedUser
+            };
+            await CourseService.addTeacher(id, newTeacher);
+            setUpdated(true);
+            handleClose();
+        }
+    } catch (error) {
+        console.error("Ошибка при добавлении учителей:", error);
+    } finally {
+        setLoading(false);
+    }
+}
+
+async function fetchPotentialUsers(
+    setLoading: Dispatch<React.SetStateAction<boolean>>,
+    setPotentialTeachers: Dispatch<React.SetStateAction<Option[] | undefined>>,
+    teachersArray: ICourseTeachersData[],
+    studentsArray: ICourseStudentsData[],
+) {
+    setLoading(true);
+    try {
+        const users: IResponseUsersData[] = await getPotentialTeachers(teachersArray, studentsArray);
+        setPotentialTeachers(users.map(user => ({ value: user.id, label: user.fullName })));
+    } catch (error) {
+        console.error("Ошибка при получении потенциальных учителей:", error);
+    } finally {
+        setLoading(false);
+    }
+}
 
 
 export default AddTeacherModal

@@ -4,21 +4,10 @@ import CloseIcon from '@mui/icons-material/Close';
 import Modal from '@mui/material/Modal';
 import { style } from '../../modalWindows/styles';
 import { useNavigate } from 'react-router-dom';
+import { DeleteGroupModalProps } from '../../../types/propsTypes/groupsPropsTypes';
 
-export interface ITypeOfDeleting{
 
-}
-
-type EditModalProps = {
-    name: string
-    openDelete: boolean;
-    handleCloseDelete: () => void;
-    setUpdated: React.Dispatch<React.SetStateAction<boolean>>;
-    deleteRequestFunction: () => Promise<void>;
-    redirectPath?: string;
-};
-
-export const DeleteModal = ({ name, openDelete, handleCloseDelete, setUpdated, deleteRequestFunction, redirectPath }: EditModalProps) => {
+export const DeleteModal = ({ name, openDelete, handleCloseDelete, setUpdated, deleteRequestFunction, redirectPath }: DeleteGroupModalProps) => {
 
     const navigate = useNavigate();
 
@@ -31,7 +20,7 @@ export const DeleteModal = ({ name, openDelete, handleCloseDelete, setUpdated, d
                 navigate(redirectPath);
             }
         } catch (error) {
-            console.log("bruh");
+            console.log("Ошибка при попытке удаления группы");
         }
     };
 

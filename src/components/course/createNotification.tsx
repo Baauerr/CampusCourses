@@ -1,5 +1,5 @@
 import { Typography, Card, Button, Grid } from '@mui/material';
-import { useState } from 'react';
+import { Dispatch, SetStateAction, useState } from 'react';
 import Modal from '@mui/material/Modal';
 import TextField from '@mui/material/TextField';
 import IconButton from '@mui/material/IconButton';
@@ -21,18 +21,8 @@ export const CreateNotification = ({ open, handleClose, setUpdated }: CreateModa
     const { id } = useParams();
 
     const handleClick = async () => {
-        try {
-            const text = textValue;
-            const isImportant = isChecked;
-
-            console.log(isImportant)
-
-            await CourseService.createNotification({ text, isImportant }, id);
-
-            setUpdated(true);
-            handleClose();
-        } catch (error) {
-            console.log("bruh");
+        if (id) {
+            await handleCreating(textValue, isChecked, setUpdated, handleClose, id);
         }
     };
 
@@ -88,3 +78,23 @@ export const CreateNotification = ({ open, handleClose, setUpdated }: CreateModa
     </Modal>
     );
 };
+
+async function handleCreating(
+    textValue: string,
+    isChecked: boolean,
+    setUpdated: Dispatch<SetStateAction<boolean>>,
+    handleClose: () => void,
+    id: string
+) {
+    try {
+        const text = textValue;
+        const isImportant = isChecked;
+
+        await CourseService.createNotification({ text, isImportant }, id);
+
+        setUpdated(true);
+        handleClose();
+    } catch (error) {
+        console.log("Ошибка при создании уведомления");
+    }
+}

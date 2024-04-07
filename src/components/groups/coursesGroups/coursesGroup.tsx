@@ -9,8 +9,8 @@ import { useAuth } from '../../../hooks/useAuth';
 import { useSelector } from 'react-redux';
 import CreateModal from './createGroupModal';
 import EditModal from './editGroupModal';
-import { IUserRolesData } from '../../../types/userTypes/roleTypes';
 import DeleteModal from './deleteModal';
+import { EditCourseButtonProps } from '../../../types/propsTypes/groupsPropsTypes';
 
 
 export const cardHoverStyles = {
@@ -92,14 +92,8 @@ export const CoursesGroup = () => {
     }
 }
 
-type EditButtonsProps = {
-    roles: IUserRolesData | null;
-    groupName: string;
-    setUpdated: React.Dispatch<React.SetStateAction<boolean>>;
-    id: string
-};
 
-const EditButtons = ({ roles, setUpdated, groupName, id }: EditButtonsProps) => {
+const EditButtons = ({ roles, setUpdated, groupName, id }: EditCourseButtonProps) => {
 
     const [openEdit, setOpenEdit] = useState(false);
 

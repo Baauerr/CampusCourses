@@ -29,7 +29,7 @@ export const CourseInfoTabs = ({ courseInfo, setUpdated, courseRole }: CourseInf
     const handleOpen = () => setOpen(true);
     const handleClose = () => setOpen(false);
 
-    const isSmallScreen = useMediaQuery('(max-width:1200px)');
+    const isSmallScreen = useMediaQuery('(max-width:540px)');
 
     const [value, setValue] = useState('one');
 

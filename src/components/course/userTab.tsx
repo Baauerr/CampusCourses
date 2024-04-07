@@ -9,10 +9,6 @@ import { CourseInfoTabsProps } from '../../types/propsTypes/corsePropsTypes';
 
 export const UsersInfoTabs = ({ studentsArray, teachersArray, setUpdated, roles, courseId }: CourseInfoTabsProps) => {
 
-    const [open, setOpen] = useState(false);
-    const handleOpen = () => setOpen(true);
-    const handleClose = () => setOpen(false);
-
     const [value, setValue] = useState('five');
 
     if (!studentsArray && !teachersArray) {
@@ -63,7 +59,6 @@ export const UsersInfoTabs = ({ studentsArray, teachersArray, setUpdated, roles,
                 studentsList={studentsArray}
                 courseId={courseId}
             />
-            {open && <CreateNotification open={open} handleClose={handleClose} setUpdated={setUpdated} />}
         </div>
     )
 }

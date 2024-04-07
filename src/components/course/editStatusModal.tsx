@@ -1,5 +1,5 @@
 import { Typography, Card, Button } from '@mui/material';
-import { useState } from 'react';
+import { Dispatch, SetStateAction, useState } from 'react';
 import IconButton from '@mui/material/IconButton';
 import CloseIcon from '@mui/icons-material/Close';
 import Modal from '@mui/material/Modal';
@@ -17,18 +17,7 @@ export const ChangeStatusModal = ({ openEdit, handleClose, setUpdated, id, cours
     const [newCourseStatus, setCourseStatus] = useState<ICourseStatusesData>(courseStatus);
 
     const handleClick = async () => {
-
-        const newStatus: IRequestChangeCourseStatusData = {
-            status: newCourseStatus
-        };
-
-        try {
-            await CourseService.changeStatus(id, newStatus);
-            setUpdated(true);
-            handleClose();
-        } catch (error) {
-            console.log("bruh");
-        }
+        handleStatusChange(newCourseStatus, setUpdated, handleClose, id);
     };
 
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -77,5 +66,24 @@ export const ChangeStatusModal = ({ openEdit, handleClose, setUpdated, id, cours
     </Modal>
     );
 };
+
+async function handleStatusChange(
+    newCourseStatus: ICourseStatusesData, 
+    setUpdated: Dispatch<SetStateAction<boolean>>,
+    handleClose: () => void,
+    id: string
+){
+    const newStatus: IRequestChangeCourseStatusData = {
+        status: newCourseStatus
+    };
+
+    try {
+        await CourseService.changeStatus(id, newStatus);
+        setUpdated(true);
+        handleClose();
+    } catch (error) {
+        console.log("bruh");
+    }
+}
 
 export default ChangeStatusModal

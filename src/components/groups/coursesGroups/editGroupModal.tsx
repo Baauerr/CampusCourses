@@ -8,31 +8,23 @@ import CloseIcon from '@mui/icons-material/Close';
 import Modal from '@mui/material/Modal';
 import TextField from '@mui/material/TextField';
 import { style } from '../../modalWindows/styles';
+import { EditGroupModalProps } from '../../../types/propsTypes/groupsPropsTypes';
 
-type EditModalProps = {
-    id: string
-    groupName: string
-    openEdit: boolean;
-    handleClose: () => void;
-    setUpdated: React.Dispatch<React.SetStateAction<boolean>>;
-};
 
-export const EditModal = ({ groupName, openEdit, handleClose, setUpdated, id }: EditModalProps) => {
+export const EditModal = ({ groupName, openEdit, handleClose, setUpdated, id }: EditGroupModalProps) => {
 
     const [textValue, setTextValue] = useState<IRequestGroupsCreateData>({ name: '' });
 
     const handleClick = async () => {
         try {
-
             const updateInfo: IRequestGroupsCreateData = {
                 name: textValue.name
             }
-
             await GroupsService.editGroup(updateInfo, id);
             setUpdated(true);
             handleClose();
         } catch (error) {
-            console.log("bruh");
+            console.log("Ошибка при редактировании группы");
         }
     };
 

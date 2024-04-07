@@ -1,5 +1,5 @@
 import { Typography, Container, Grid } from '@mui/material';
-import { useEffect, useState } from 'react';
+import { Dispatch, useEffect, useState } from 'react';
 import { ICourseRoleData, IResponseCourseInfoData } from '../../types/coursesTypes/courseTypes';
 import { CourseService } from './CourseService';
 import { useParams } from 'react-router-dom';
@@ -18,27 +18,11 @@ export const Course = () => {
     const [courseRoles, setCourseRole] = useState<ICourseRoleData>();
 
     useEffect(() => {
-        const fetchData = async () => {
-            try {
-                const info = await CourseService.getCourseInfo(id);
-                const roles = await AuthService.getUserRole();
-                if (info && roles) {
-                    setCourseInfo(info);
-                    if (roles !== null) {
-                        if (id) {
-                            const courseRoles = await getUserCourseRole(info.students, info.teachers, roles, id);
-                            setCourseRole(courseRoles)
-                        }
-                    }
-                }
-            } catch (error) {
-                console.error(error);
-            }
-        };
-
         if (updated) {
-            fetchData();
-            setUpdated(false);
+            if (id){ 
+                fetchCourseData(setCourseInfo, setCourseRole, id);
+                setUpdated(false);
+            }
         }
     }, [updated]);
 
@@ -73,6 +57,28 @@ export const Course = () => {
     )
 }
 
+
+async function fetchCourseData (
+    setCourseInfo: Dispatch<React.SetStateAction<IResponseCourseInfoData | undefined>>,
+    setCourseRole: Dispatch<React.SetStateAction<ICourseRoleData | undefined>>,
+    id: string
+) {
+    try {
+        const info = await CourseService.getCourseInfo(id);
+        const roles = await AuthService.getUserRole();
+        if (info && roles) {
+            setCourseInfo(info);
+            if (roles !== null) {
+                if (id) {
+                    const courseRoles = await getUserCourseRole(info.students, info.teachers, roles, id);
+                    setCourseRole(courseRoles)
+                }
+            }
+        }
+    } catch (error) {
+        console.error(error);
+    }
+};
 
 
 

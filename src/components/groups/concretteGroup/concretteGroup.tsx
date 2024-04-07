@@ -1,7 +1,7 @@
 import Grid from '@mui/material/Grid';
 import { Typography, Card, Container, Link as MuiLink, Button } from '@mui/material';
 import { GroupsService } from '../groupsService';
-import { useEffect, useState } from 'react';
+import { Dispatch, SetStateAction, useEffect, useState } from 'react';
 import { IRequestCoursesData, TypeOfCourses } from '../../../types/groupsTypes/groupCourses';
 import { useLocation, useParams } from 'react-router-dom';
 import statusColorHelper from '../../../helpers/coursesHelper/statusColorHelper';
@@ -14,12 +14,15 @@ import seasonTranslator from '../../../helpers/coursesHelper/semesterHelper';
 import statusTranslator from '../../../helpers/coursesHelper/statusHelper';
 import { typesOfModal } from '../../../types/coursesTypes/courseTypes';
 
-export const ConcretteGroup = ( typeOfCourses : TypeOfCourses) => {
+type ConcretteGroupProps = {
+    typeOfCourses: TypeOfCourses;
+};
+
+export const ConcretteGroup = ( { typeOfCourses }: ConcretteGroupProps) => {
 
     const [groups, setGroupsInfo] = useState<IRequestCoursesData[]>();
     const [open, setOpen] = useState(false);
     const [updated, setUpdated] = useState(true)
-    const [typeOfCourse, setTypeOfCourse] = useState<TypeOfCourses>();
     const [groupName, setGroupName] = useState<string>();
     const { id } = useParams();
     const location = useLocation();
@@ -29,34 +32,10 @@ export const ConcretteGroup = ( typeOfCourses : TypeOfCourses) => {
     const handleClose = () => setOpen(false);
 
     const fetchData = async () => {
-        try {
-            let groupsInfo: IRequestCoursesData[] | undefined
-            switch (typeOfCourses) {
-                case TypeOfCourses.All:
-                    groupsInfo = await GroupsService.getCourses(id);
-                    break;
-                case TypeOfCourses.My:
-                    setTypeOfCourse(typeOfCourse)
-                    groupsInfo = await GroupsService.getMyCourses();
-                    break;
-                case TypeOfCourses.Teaching:
-                    setTypeOfCourse(typeOfCourse)
-                    groupsInfo = await GroupsService.getTeachingCourses();
-                    break;
-            }
-            if (groupsInfo !== undefined) {
-                setGroupsInfo(groupsInfo)
-            }
-            else {
-                throw Error("Проблема в получении данных")
-            }
-        } catch (error) {
-            console.error(error);
-        }
+        await fetchGroupsData(typeOfCourses, setGroupsInfo, id);
     };
 
     useEffect(() => {
-
         if (updated || location) {
             fetchData();
         }
@@ -123,6 +102,36 @@ export const ConcretteGroup = ( typeOfCourses : TypeOfCourses) => {
     )
 }
 
+async function fetchGroupsData (
+    typeOfCourses: TypeOfCourses,
+    setGroupsInfo: Dispatch<SetStateAction<IRequestCoursesData[] | undefined>>,
+    id?: string,
+) {
+    try {
+        let groupsInfo: IRequestCoursesData[] | undefined
+        console.log(typeOfCourses)
+        switch (typeOfCourses) {
+            case TypeOfCourses.All: 
+                groupsInfo = await GroupsService.getCourses(id);
+                break;
+            case TypeOfCourses.My:
+                groupsInfo = await GroupsService.getMyCourses();
+                break;
+            case TypeOfCourses.Teaching:
+                groupsInfo = await GroupsService.getTeachingCourses();
+                break;
+        }
+        if (groupsInfo !== undefined) {
+            setGroupsInfo(groupsInfo)
+        }
+        else {
+            throw Error()
+        }
+    } catch (error) {
+        console.error(error);
+    }
+}
+
 const getGroupName = async (id?: string): Promise<string | undefined> => {
 
     const allGroups = await GroupsService.getCoursesGroups();
@@ -131,4 +140,3 @@ const getGroupName = async (id?: string): Promise<string | undefined> => {
 
     return neededGroup?.name
 }
-
