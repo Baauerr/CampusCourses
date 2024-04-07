@@ -1,30 +1,43 @@
-# React + TypeScript + Vite
+# CampusCourses
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## Сайт для работы с кампусными курсами
 
-Currently, two official plugins are available:
+## Сервис включает в себя следующие функции:
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+Для всех пользователей:
+- Авторизация и регистрация пользователей
+- Редактирование профиля
+- Просмотр списка групп
+- Возможность посмотреть список курсов в группе
+- Возможность посмотреть подробную информацию о курсе
 
-## Expanding the ESLint configuration
+  В системе предусмотрена иерархия ролей (Администратор <- Главный преподаватель <- преподаватель <- студент <- обычный пользователь). Каждая следующая роль имеет функционал предыдущей.
+  При этом, роли "Главный преподаватель", "Преподаватель", "Студент" существуют только в рамках конкретного курса, а не всей системы (на разных курсах у одного и того же пользователя разные роли)
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+Для администратора: 
+- Создание, удаление, редактирование групп 
+- Создание, удаление, редактирование курсов
+  Для главного преподавателя:
+- Редактирование курса (только описание и требования)
+  Для преподавателя
+- Редактирование, просмотр оценок студентов
+- Создание уведомлений
+- Одобрение или отклонения заявок на встувление на курс
+  Для студента
+- Подача заявки на курс (если курс открыт для записи)
+- Просмотр только своих оценок
 
-- Configure the top-level `parserOptions` property like this:
+## Стэк технологий:
 
-```js
-export default {
-  // other rules...
-  parserOptions: {
-    ecmaVersion: 'latest',
-    sourceType: 'module',
-    project: ['./tsconfig.json', './tsconfig.node.json'],
-    tsconfigRootDir: __dirname,
-  },
-}
-```
+- Npm
+- Vite
+- Typescript
+- React
+- React-Router-Dom
+- Redux-Toolkit
+- Formik
+- Axios
+- MUI
+- Eslint
 
-- Replace `plugin:@typescript-eslint/recommended` to `plugin:@typescript-eslint/recommended-type-checked` or `plugin:@typescript-eslint/strict-type-checked`
-- Optionally add `plugin:@typescript-eslint/stylistic-type-checked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and add `plugin:react/recommended` & `plugin:react/jsx-runtime` to the `extends` list
+
